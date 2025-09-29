@@ -1,0 +1,102 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Header Section -->
+      <div class="logo-container">
+        <div class="logo-wrapper">
+          <ion-icon name="log-in-outline" class="logo"></ion-icon>
+        </div>
+        <h1 class="title">Selamat Datang Kembali</h1>
+        <p class="subtitle">Silakan login untuk melanjutkan</p>
+      </div>
+      
+      <!-- Login Form -->
+      <form (ngSubmit)="login()" class="form-container">
+        <!-- Email Input -->
+        <div class="form-group">
+          <label class="input-label">Email</label>
+          <ion-item class="form-item" lines="none">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              [ngModelOptions]="{standalone: true}"
+              [disabled]="isLoading"
+              placeholder="contoh@email.com"
+              required>
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <div class="password-header">
+            <label class="input-label">Password</label>
+            <a href="#" class="forgot-link">Lupa password?</a>
+          </div>
+          <ion-item class="form-item" lines="none">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="password"
+              [ngModelOptions]="{standalone: true}"
+              [disabled]="isLoading"
+              placeholder="••••••••"
+              required>
+            </ion-input>
+            <ion-button
+              fill="clear"
+              slot="end"
+              (click)="togglePasswordVisibility()"
+              [disabled]="isLoading">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" class="icon"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="form-options">
+          <ion-item lines="none" class="remember-me">
+            <ion-checkbox slot="start" [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}"></ion-checkbox>
+            <ion-label>Ingat saya</ion-label>
+          </ion-item>
+        </div>
+
+        <!-- Login Button -->
+        <ion-button
+          expand="block"
+          type="submit"
+          class="login-button"
+          [disabled]="isLoading || !email || !password"
+          shape="round">
+          <ion-spinner *ngIf="isLoading" name="crescent" class="spinner"></ion-spinner>
+          {{ isLoading ? 'Memproses...' : 'Masuk' }}
+        </ion-button>
+
+        <!-- Divider -->
+        <div class="divider">
+          <span class="divider-line"></span>
+          <span class="divider-text">atau lanjutkan dengan</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- Google Sign In -->
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="loginWithGoogle()"
+          class="login-google-button"
+          [disabled]="isLoading"
+          shape="round">
+          <ion-icon slot="start" name="logo-google" class="google-icon"></ion-icon>
+          {{ isLoading ? 'Sedang Login...' : 'Google' }}
+        </ion-button>
+
+        <!-- Sign Up Link -->
+        <div class="signup-link">
+          Belum punya akun? <a routerLink="/register" class="link">Daftar Sekarang</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

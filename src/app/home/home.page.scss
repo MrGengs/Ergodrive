@@ -1,0 +1,1635 @@
+// ============================================
+// 1. Global Styles & Resets
+// ============================================
+
+// Trend Chart Styles
+.trend-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  gap: 12px;
+  margin: 20px 0;
+
+  .trend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+  }
+
+  .trend-bar {
+    width: 100%;
+    max-width: 40px;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    transition: height 0.3s ease, transform 0.2s ease, opacity 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5px;
+    cursor: default;
+
+    &::after {
+      content: attr(data-value);
+      position: absolute;
+      top: -25px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4b5563;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2px 6px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  .trend-label {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-align: center;
+  }
+}
+
+// Base reset
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  width: 100vw;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+// ============================================
+// 2. Layout Components
+// ============================================
+
+// Main container
+.dashboard-container {
+  background-color: #f5f6fa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+// Content wrappers
+.dashboard-content,
+.main-content {
+  width: 100vw;
+  max-width: 100%;
+  min-height: calc(100vh - 60px);
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+}
+
+// Grid layouts
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  width: 100%;
+  margin: 0;
+  padding: 15px;
+}
+
+// Horizontal sections
+.horizontal-sections {
+  display: flex;
+  gap: 20px;
+  margin: 30px 15px;
+  width: calc(100% - 30px);
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+// ============================================
+// 3. Reusable Components
+// ============================================
+
+// Card component
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  transition: all 0.3s ease;
+
+  &--elevated {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Section header
+.section-header {
+  margin-bottom: 1.5rem;
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #edf2f7;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 60px;
+      height: 2px;
+      background: #4f46e5;
+      transition: width 0.3s ease;
+    }
+
+    &:hover::after {
+      width: 80px;
+    }
+  }
+}
+
+// Button component
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  &--primary {
+    background-color: #4f46e5;
+    color: white;
+
+    &:hover {
+      background-color: #4338ca;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    border-color: #e2e8f0;
+    color: #4f46e5;
+
+    &:hover {
+      background-color: #f8fafc;
+      border-color: #c7d2fe;
+    }
+  }
+}
+
+// ============================================
+// 4. Page Sections
+// ============================================
+
+// Activities Section
+.activities-section {
+  @extend .card;
+  flex: 1;
+  min-width: 0; // Prevents flex item from overflowing
+
+  .activities-grid {
+    display: grid;
+    gap: 1rem;
+  }
+}
+
+// ============================================
+// NOTIFICATIONS SECTION
+// ============================================
+
+.notifications-section {
+  @extend .card;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  // Section Header
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #edf2f7;
+
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .mark-all-read {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: #4f46e5;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(79, 70, 229, 0.1);
+      }
+
+      ion-icon {
+        font-size: 16px;
+      }
+    }
+  }
+
+  // Notifications Grid
+  .notifications-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 4px;
+
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 3px;
+
+      &:hover {
+        background: #cbd5e1;
+      }
+    }
+
+    // When there are notifications
+    &.has-notifications {
+      padding: 4px;
+    }
+
+    // Empty State
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      color: #9ca3af;
+
+      ion-icon {
+        font-size: 48px;
+        color: #e5e7eb;
+        margin-bottom: 16px;
+      }
+
+      p {
+        font-size: 16px;
+        font-weight: 500;
+        margin: 0 0 4px;
+        color: #6b7280;
+      }
+
+      small {
+        font-size: 13px;
+      }
+    }
+
+    // Notification Card
+    .notification-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border-left: 3px solid #e2e8f0;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+
+      // Unread state
+      &.unread {
+        background-color: #f8fafc;
+        border-left-color: #4f46e5;
+
+        .notification-header .notification-icon {
+          position: relative;
+
+          .unread-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            border: 2px solid white;
+          }
+        }
+
+        .notification-title {
+          font-weight: 600;
+          color: #1e293b;
+        }
+
+        .notification-time {
+          color: #4f46e5;
+          font-weight: 500;
+        }
+      }
+
+      // Hover state
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+        .notification-title {
+          color: #4f46e5;
+        }
+      }
+
+      // Notification Header
+      .notification-header {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+
+        // Notification Icon
+        .notification-icon {
+          flex-shrink: 0;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+
+          ion-icon {
+            font-size: 20px;
+          }
+        }
+
+        // Notification Content
+        .notification-content {
+          flex: 1;
+          min-width: 0;
+
+          .notification-title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 4px;
+
+            .notification-title {
+              margin: 0;
+              font-size: 14px;
+              font-weight: 500;
+              color: #4b5563;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              transition: color 0.2s ease;
+            }
+
+            .notification-time {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              font-size: 11px;
+              color: #9ca3af;
+              white-space: nowrap;
+
+              ion-icon {
+                font-size: 12px;
+              }
+            }
+          }
+
+          .notification-message {
+            margin: 0;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2; // Standar property
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+
+      // Notification Actions
+      .notification-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px dashed #e2e8f0;
+
+        .mark-read-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #f8fafc;
+          color: #4f46e5;
+          border: 1px solid #e2e8f0;
+          border-radius: 6px;
+          padding: 4px 12px;
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #f1f5ff;
+            border-color: #c7d2fe;
+            color: #4338ca;
+          }
+
+          ion-icon {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// 5. UI Components
+// ============================================
+
+// Avatar Component
+.avatar-container {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6368;
+  font-weight: 600;
+  font-size: 16px;
+  overflow: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+
+  .profile-image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    .profile-image {
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-url-debug {
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 10px;
+      padding: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .profile-image {
+    transform: scale(1.1);
+  }
+
+  .user-initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #5f6368;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+  }
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+// Header Styles
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px; /* Increased padding for more space */
+  background-color: rgba(255, 255, 255, 1); /* White 100% */
+  backdrop-filter: blur(10px); /* Add blur effect for better transparency */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(233, 236, 239, 0.5); /* Transparent border */
+  position: relative;
+  z-index: 10; /* Ensure header appears above sidebar */
+  min-height: 120px; /* Minimum height to prevent content collision */
+}
+
+.header-left {
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 60px; /* Increased height */
+
+    .logo-img {
+      height: 100%;
+      width: auto;
+      max-width: 200px; /* Increased max-width */
+      object-fit: contain;
+    }
+  }
+}
+
+// Dashboard Statistics Overview
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(280px, 1fr)
+  ); /* Increased min-width */
+  gap: 25px; /* Increased gap */
+  margin-bottom: 40px; /* Increased margin */
+  margin-top: 20px; /* Add top margin */
+
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px; /* Increased padding */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+    min-height: 120px; /* Minimum height for consistency */
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+
+      ion-icon {
+        color: white;
+        font-size: 24px;
+      }
+    }
+
+    .stat-content {
+      flex: 1;
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #666;
+      }
+    }
+  }
+}
+
+// Performance Trends Section
+.performance-section {
+  margin-bottom: 30px;
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .trend-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .trend-chart {
+      .trend-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        height: 200px;
+        padding: 10px 0;
+
+        .trend-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          flex: 1;
+          max-width: 60px;
+
+          .trend-bar {
+            width: 40px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+
+          .trend-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Horizontal sections container
+.horizontal-sections {
+  display: flex;
+  gap: 20px;
+  margin: 30px 0;
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+// Horizontal sections container
+.horizontal-sections {
+  display: flex;
+  gap: 20px;
+  margin: 30px 0;
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+// Recent Activities Section
+.activities-section {
+  flex: 1;
+  min-width: 0; // Prevents flex item from overflowing
+  padding: 0 10px;
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #edf2f7;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 80px;
+      height: 2px;
+      background: #4f46e5;
+    }
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+    margin: 0 auto;
+
+    .activity-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: #4f46e5;
+        border-radius: 4px 0 0 4px;
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.1);
+        border-color: #c7d2fe;
+
+        &::before {
+          width: 6px;
+        }
+      }
+
+      .activity-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        position: relative;
+
+        .activity-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          transition: all 0.3s ease;
+
+          ion-icon {
+            font-size: 1.5rem;
+            color: #4f46e5;
+            transition: transform 0.3s ease;
+          }
+        }
+
+        .activity-info {
+          flex: 1;
+          min-width: 0; // Prevents flex item from overflowing
+
+          .activity-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0 0 0.25rem 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.2s ease;
+          }
+
+          .activity-time {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #718096;
+            margin: 0;
+            font-weight: 500;
+
+            ion-icon {
+              margin-right: 0.25rem;
+              font-size: 0.9em;
+              color: #a0aec0;
+            }
+          }
+        }
+
+        .activity-status {
+          padding: 0.25rem 0.75rem;
+          border-radius: 9999px;
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+          transition: all 0.2s ease;
+          margin-left: auto;
+          align-self: flex-start;
+
+          ion-icon {
+            font-size: 0.9em;
+          }
+        }
+      }
+    }
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .mark-all-read {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: #4f46e5;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      ion-icon {
+        font-size: 14px;
+      }
+
+      &:hover {
+        background: rgba(79, 70, 229, 0.1);
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+
+  // Notifications Grid
+  .notifications-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+    padding: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 transparent;
+
+    // Custom scrollbar for WebKit browsers
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #e2e8f0;
+      border-radius: 3px;
+
+      &:hover {
+        background-color: #cbd5e1;
+      }
+    }
+
+    // Notification Card
+    .notification-card {
+      // Layout
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+
+      // Visual Styling
+      background: white;
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(226, 232, 240, 0.7);
+      border-left: 4px solid #e2e8f0;
+      backdrop-filter: blur(10px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+      // Hover Effect Background
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(99, 102, 241, 0.05) 0%,
+          rgba(99, 102, 241, 0) 100%
+        );
+        transition: width 0.3s ease;
+        z-index: 0;
+      }
+
+      // Unread State
+      &.unread {
+        background: rgba(248, 250, 252, 0.8);
+        border-left-color: #4f46e5;
+        border-color: #e0e7ff;
+
+        // Title Styling for Unread
+        .notification-title {
+          color: #1e1b4b;
+          font-weight: 600;
+          position: relative;
+          padding-left: 20px;
+
+          // Unread Indicator Dot
+          &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            margin-right: 0;
+            font-size: 0;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+          }
+        }
+
+        // Time Styling for Unread
+        .notification-time {
+          color: #4f46e5;
+          font-weight: 500;
+          background: rgba(79, 70, 229, 0.1);
+          padding: 2px 10px;
+          border-radius: 12px;
+          font-size: 11px;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        border-color: #e0e7ff;
+
+        &::before {
+          width: 100%;
+        }
+
+        .notification-title {
+          color: #4f46e5;
+        }
+      }
+
+      // Notification Header
+      .notification-header {
+        // Layout
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+
+        // Notification Title
+        .notification-title {
+          // Typography
+          font-size: 14px;
+          font-weight: 600;
+          color: #1e293b;
+          line-height: 1.4;
+
+          // Layout
+          margin: 0;
+          flex: 1;
+          display: flex;
+          align-items: center;
+
+          // Animation
+          transition: color 0.2s ease;
+        }
+
+        // Time Indicator
+        .notification-time {
+          // Typography
+          font-size: 11px;
+          color: #6b7280;
+          font-weight: 500;
+
+          // Layout
+          white-space: nowrap;
+          margin-left: 12px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          // Animation
+          transition: all 0.2s ease;
+
+          // Icon Styling
+          ion-icon {
+            font-size: 12px;
+            opacity: 0.7;
+          }
+        }
+      }
+
+      // Notification Message
+      .notification-message {
+        // Typography
+        font-size: 13px;
+        color: #4b5563;
+        line-height: 1.5;
+
+        // Layout
+        margin: 0 0 14px 0;
+        padding-left: 20px;
+        position: relative;
+
+        // Custom Bullet Point
+        &::before {
+          content: "→";
+          position: absolute;
+          left: 0;
+          top: 0;
+          color: #94a3b8;
+          font-size: 12px;
+          line-height: 1.5;
+          transition: color 0.2s ease;
+        }
+      }
+
+      // Notification Actions
+      .notification-actions {
+        // Layout
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 6px;
+        padding-top: 10px;
+        border-top: 1px dashed #e2e8f0;
+        position: relative;
+        z-index: 1;
+
+        // Mark as Read Button
+        .mark-read-btn {
+          // Typography
+          font-size: 12px;
+          font-weight: 500;
+          color: #4f46e5;
+
+          // Layout
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 14px;
+          border-radius: 6px;
+          border: 1px solid #e2e8f0;
+          background: #f8fafc;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+
+          // Animation
+          transition: all 0.2s ease;
+
+          // Hover Effect Background
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              90deg,
+              rgba(99, 102, 241, 0.1) 0%,
+              rgba(99, 102, 241, 0) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+
+          // Icon Styling
+          ion-icon {
+            font-size: 14px;
+            transition: transform 0.2s ease;
+          }
+
+          // Hover State
+          &:hover {
+            background: #f1f5ff;
+            border-color: #c7d2fe;
+            color: #4338ca;
+            box-shadow: 0 1px 3px rgba(79, 70, 229, 0.1);
+
+            &::before {
+              opacity: 1;
+            }
+
+            ion-icon {
+              transform: translateX(2px);
+            }
+          }
+
+          // Active State
+          &:active {
+            transform: translateY(1px);
+            box-shadow: none;
+          }
+        }
+      }
+
+      // Animation for New Notifications
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      // Apply Animation to New Notifications
+      &:not(.ng-animating) {
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+    }
+
+    // Spacing Between Notifications
+    & > * + * {
+      margin-top: 4px;
+    }
+
+    // Empty State
+    .empty-state {
+      // Layout
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+
+      // Visual Styling
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px dashed #e5e7eb;
+      color: #6b7280;
+
+      // Icon Styling
+      ion-icon {
+        font-size: 48px;
+        color: #d1d5db;
+        margin-bottom: 16px;
+      }
+
+      // Title Text
+      p {
+        font-size: 16px;
+        font-weight: 500;
+        margin: 0 0 4px;
+        color: #4b5563;
+      }
+
+      // Description Text
+      small {
+        font-size: 13px;
+        color: #9ca3af;
+      }
+    }
+  }
+}
+
+.header-center {
+  text-align: center;
+  flex: 1;
+
+  .welcome-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+  }
+
+  .welcome-subtitle {
+    font-size: 16px;
+    color: #6c757d;
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.header-right {
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 50px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .avatar-container {
+      position: relative;
+      display: inline-block;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: #2b6eff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 18px;
+      overflow: hidden;
+      position: relative;
+      transition: all 0.2s ease;
+
+      .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-sizing: border-box;
+        transition: transform 0.3s ease;
+      }
+
+      .user-initial {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background-color: #2b6eff;
+        color: white;
+        font-weight: 600;
+        border-radius: 50%;
+        text-transform: uppercase;
+      }
+
+      &:hover .profile-image {
+        transform: scale(1.1);
+      }
+    }
+
+    .online-indicator {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #4caf50;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+      transition: all 0.2s ease;
+    }
+  }
+
+  .user-info {
+    .user-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f1f1f;
+      margin: 0 0 2px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
+    }
+
+    .user-status {
+      font-size: 12px;
+      color: #5f6368;
+      margin: 0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #4caf50;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+// Dashboard Content Layout
+.dashboard-content {
+  /* Remove height constraints to allow proper scrolling */
+  min-height: auto;
+  height: auto;
+}
+
+// Main Content Area
+.main-content {
+  padding: 40px; /* Increased padding */
+  margin-top: 20px; /* Add top margin */
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+// Chart Card Styles
+.chart-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #f1f3f4;
+
+    .card-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+
+  .card-content {
+    padding: 25px;
+
+    .bar-chart {
+      .chart-container {
+        .bar-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .bar-label {
+            flex: 0 0 140px;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+          }
+
+          .bar-wrapper {
+            flex: 1;
+            height: 24px;
+            background-color: #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 0 15px;
+
+            .bar-fill {
+              height: 100%;
+              background: linear-gradient(135deg, #2b6eff 0%, #1e5cdb 100%);
+              border-radius: 12px;
+              transition: width 0.8s ease;
+              position: relative;
+
+              &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(
+                  90deg,
+                  transparent 0%,
+                  rgba(255, 255, 255, 0.3) 50%,
+                  transparent 100%
+                );
+                animation: shimmer 2s infinite;
+              }
+            }
+          }
+
+          .bar-value {
+            flex: 0 0 40px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2b6eff;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Shimmer animation for bars
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .main-content {
+    .charts-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    padding: 15px 20px;
+  }
+
+  .header-center {
+    .welcome-title {
+      font-size: 24px;
+    }
+
+    .welcome-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .chart-card {
+    .card-content {
+      padding: 20px;
+
+      .bar-chart {
+        .chart-container {
+          .bar-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+
+            .bar-label {
+              flex: none;
+            }
+
+            .bar-wrapper {
+              width: 100%;
+              margin: 0;
+            }
+
+            .bar-value {
+              flex: none;
+              align-self: flex-end;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#container a {
+  text-decoration: none;
+}

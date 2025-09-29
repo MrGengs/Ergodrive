@@ -1,0 +1,1144 @@
+// Import theme variables
+@import '../../theme/variables';
+
+// Mixin for card styles
+@mixin card-style {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-sm;
+  border: $border-width-sm solid rgba($accent-color, 0.1);
+  transition: all 0.3s ease;
+  min-height: $icon-size-xl * 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &:hover {
+    transform: translateY(-$spacing-xxs);
+    box-shadow: $shadow-md;
+  }
+}
+
+// Dashboard Container
+.dashboard-container {
+  height: 100vh;
+  background: $background-light;
+  padding: $spacing-md;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-sm;
+  }
+}
+
+// Header Styles
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $blue-gradient-2;
+  color: white;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  margin-bottom: $spacing-lg;
+
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+    gap: $spacing-md;
+    text-align: center;
+  }
+
+  .header-left {
+    .logo {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur($blur-md);
+      border-radius: $border-radius;
+      padding: $spacing-sm;
+      display: inline-block;
+      border: $border-width solid rgba(255, 255, 255, 0.3);
+      
+      .logo-img {
+        height: $icon-size-lg;
+        width: auto;
+        display: block;
+        filter: brightness(0) invert(1);
+        /* Membuat logo menjadi putih untuk kontras dengan background biru */
+      }
+    }
+  }
+
+  .header-center {
+    flex: 1;
+    margin: 0 $spacing-xxl;
+
+    @media (max-width: $breakpoint-md) {
+      margin: 0;
+    }
+
+    .welcome-title {
+      font-size: $font-size-xxl;
+      font-weight: 600;
+      color: white;
+      margin: 0 0 $spacing-xs 0;
+      text-shadow: $text-shadow-sm;
+    }
+
+    .welcome-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+      font-size: $font-size-sm;
+      text-shadow: $text-shadow-sm;
+    }
+  }
+
+  .header-right {
+    .action-buttons {
+      display: flex;
+      gap: $spacing-sm;
+
+      ion-button {
+        --background: rgba(255, 255, 255, 0.1);
+        --background-hover: rgba(255, 255, 255, 0.2);
+        --border-radius: 50%;
+        --padding-start: $spacing-sm;
+        --padding-end: $spacing-sm;
+        --padding-top: $spacing-sm;
+        --padding-bottom: $spacing-sm;
+        --color: white;
+        --box-shadow: $shadow-sm;
+        transition: all 0.3s ease;
+
+        &:hover {
+          --background: rgba(255, 255, 255, 0.2);
+          transform: scale(1.05);
+        }
+
+        ion-icon {
+          font-size: $font-size-xl;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Dashboard Content
+.dashboard-content {
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+// Statistics Overview
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xxl;
+  
+  // For larger screens, try to fit 4 boxes perfectly
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1400px;
+    margin: 0 auto $spacing-xxl;
+  }
+  
+  // For medium screens, fit 2 boxes per row
+  @media (max-width: 1199px) and (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+    margin: 0 auto $spacing-xxl;
+  }
+  
+  // For mobile, 1 box per row
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
+
+.stat-card {
+  @include card-style;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $icon-size-xl * 2;
+    height: $icon-size-xl * 2;
+    background: rgba($primary-blue, 0.1);
+    border-radius: $border-radius-lg;
+    
+    ion-icon {
+      font-size: $font-size-xl;
+      color: $primary-blue;
+    }
+  }
+  
+  .stat-content {
+    flex: 1;
+    
+    .stat-value {
+      font-size: $font-size-xxl;
+      font-weight: 600;
+      color: $text-primary;
+      margin-bottom: $spacing-xs;
+    }
+    
+    .stat-label {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      font-weight: 500;
+    }
+  }
+}
+
+// Performance Metrics
+.performance-metrics {
+  margin-bottom: $spacing-xxl;
+}
+
+
+// Detailed Analysis Section
+.detailed-analysis {
+  margin-bottom: $spacing-xxl;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  // For medium screens, tetap 2 kotak per baris
+  @media (max-width: 1199px) and (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+  }
+  
+  // For mobile, 1 kotak per baris
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analysis-card {
+  @include card-style;
+
+  .analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-md;
+    border-bottom: $border-width solid $border-light;
+
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: 600;
+      color: $text-primary;
+      margin: 0;
+    }
+
+    .analysis-value {
+      font-size: $font-size-xl;
+      font-weight: 700;
+      color: $primary-blue;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      
+      .trend-indicator {
+        font-size: $font-size-xs;
+        font-weight: 500;
+        margin-top: $spacing-xs;
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        
+        &.improvement {
+          color: $success-color;
+        }
+        
+        &.decline {
+          color: $danger-color;
+        }
+        
+        &.stable {
+          color: $warning-color;
+        }
+      }
+    }
+  }
+
+  .analysis-content {
+    .analysis-description {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      line-height: 1.6;
+      margin-bottom: $spacing-lg;
+      padding: $spacing-md;
+      background: rgba($accent-color, 0.05);
+      border-radius: $border-radius-md;
+      border-left: $border-width-md solid $accent-color;
+    }
+  }
+
+  .analysis-details {
+    .analysis-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: $spacing-md 0;
+      font-size: $font-size-sm;
+      border-bottom: $border-width-sm solid rgba($border-color, 0.3);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .item-label {
+        color: $text-secondary;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        
+        .item-icon {
+          width: $icon-size-xl * 0.6;
+          height: $icon-size-xl * 0.6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba($accent-color, 0.1);
+          border-radius: $border-radius-sm;
+          color: $accent-color;
+          font-size: $font-size-xs;
+        }
+      }
+
+      .item-value {
+        font-weight: 600;
+        color: $text-primary;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        
+        .item-subtext {
+          font-size: $font-size-xs;
+          color: $text-secondary;
+          font-weight: 400;
+          margin-top: $spacing-xs;
+        }
+      }
+
+      .improvement {
+        color: $success-color;
+      }
+
+      .decline {
+        color: $danger-color;
+      }
+      
+      .stable {
+        color: $warning-color;
+      }
+    }
+  }
+  
+  .analysis-footer {
+    margin-top: $spacing-lg;
+    padding-top: $spacing-md;
+    border-top: $border-width solid $border-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .analysis-status {
+      font-size: $font-size-xs;
+      font-weight: 500;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $border-radius-md;
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      
+      &.status-excellent {
+        background: rgba($success-color, 0.1);
+        color: $success-color;
+      }
+      
+      &.status-good {
+        background: rgba($info-color, 0.1);
+        color: $info-color;
+      }
+      
+      &.status-needs-attention {
+        background: rgba($warning-color, 0.1);
+        color: $warning-color;
+      }
+      
+      &.status-critical {
+        background: rgba($danger-color, 0.1);
+        color: $danger-color;
+      }
+    }
+    
+    .analysis-action {
+      font-size: $font-size-xs;
+      color: $accent-color;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: $spacing-lg;
+  
+  // For larger screens, try to fit 3-4 boxes perfectly
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  // For medium screens, fit 2 boxes per row
+  @media (max-width: 1199px) and (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  // For mobile, 1 box per row
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recommendation-card {
+  @include card-style;
+
+  .recommendation-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    .recommendation-icon {
+      width: $icon-size-md;
+      height: $icon-size-md;
+      background: $primary-blue-pale;
+      border-radius: $border-radius-lg;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: $font-size-lg;
+        color: $primary-blue;
+      }
+    }
+
+    .recommendation-title {
+      font-size: $font-size-base;
+      font-weight: 600;
+      color: $text-primary;
+      margin: 0;
+    }
+  }
+
+  .recommendation-content {
+    p {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+
+  .recommendation-priority {
+    margin-top: $spacing-md;
+    padding-top: $spacing-md;
+    border-top: $border-width solid $border-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .priority-label {
+      font-size: $font-size-xs;
+      color: $text-secondary;
+    }
+
+    .priority-badge {
+      font-size: $font-size-xs;
+      font-weight: 500;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $border-radius-md;
+
+      &.priority-high {
+        background: rgba($danger-color, 0.1);
+        color: $danger-color;
+      }
+
+      &.priority-medium {
+        background: rgba($warning-color, 0.1);
+        color: $warning-color;
+      }
+
+      &.priority-low {
+        background: rgba($success-color, 0.1);
+        color: $success-color;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: $breakpoint-md) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: $spacing-md;
+    text-align: center;
+  }
+
+  .header-center {
+    margin: 0;
+  }
+
+  .stats-overview {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+
+  .analysis-grid,
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
+
+// Section Titles
+.section-title {
+  @include section-title-beban-kerja-kemudi;
+}
+
+// Recent Activities Section
+.activities-section {
+  margin-bottom: $spacing-xxl;
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $spacing-lg;
+    
+    // For larger screens, try to fit 3-4 boxes perfectly
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    // For medium screens, fit 2 boxes per row
+    @media (max-width: 1199px) and (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    // For mobile, 1 box per row
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+
+    .activity-card {
+      @include card-style;
+
+      .activity-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $spacing-md;
+      }
+
+      .activity-icon {
+        width: $icon-size-lg;
+        height: $icon-size-lg;
+        border-radius: $border-radius-md;
+        background: $blue-gradient-2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-xs $spacing-md;
+        border-radius: $border-radius-lg;
+        font-size: $font-size-xs;
+        font-weight: 500;
+        text-align: center;
+        min-width: $icon-size-lg * 2.67;
+
+        &.completed {
+          background: rgba($success-color, 0.1);
+          color: $success-color;
+          border: $border-width-sm solid rgba($success-color, 0.2);
+        }
+
+        &.success {
+          background: rgba($info-color, 0.1);
+          color: $info-color;
+          border: $border-width-sm solid rgba($info-color, 0.2);
+        }
+
+        &.warning {
+          background: rgba($warning-color, 0.1);
+          color: $warning-color;
+          border: $border-width-sm solid rgba($warning-color, 0.2);
+        }
+      }
+
+      .activity-details {
+        p {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          margin: 0;
+          padding: $spacing-md;
+          background: $light-gray;
+          border-radius: $border-radius-md;
+          border-left: $border-width-md solid $accent-color;
+          line-height: 1.5;
+        }
+      }
+
+      .recommendation-action {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: $spacing-md;
+
+        .btn-action {
+          padding: $spacing-sm $spacing-md;
+          background: $blue-gradient-2;
+          color: white;
+          border: none;
+          border-radius: $border-radius-md;
+          font-size: $font-size-sm;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-$spacing-xxs);
+            box-shadow: $shadow-lg;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.analysis-value {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $success-color;
+  text-align: center;
+  margin-top: $spacing-xs;
+}
+
+.analysis-details {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.analysis-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  padding: $spacing-sm 0;
+  border-bottom: $border-width-sm solid $border-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    font-weight: 500;
+  }
+
+  .value {
+    font-weight: 600;
+    color: $text-primary;
+  }
+}
+
+.improvement {
+  color: $success-color;
+  font-weight: 600;
+}
+
+.decline {
+  color: $danger-color;
+  font-weight: 600;
+}
+
+// Charts Section
+.charts-section {
+  margin-bottom: $spacing-xxl;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: $spacing-lg;
+  
+  // For larger screens, try to fit 2-3 boxes perfectly
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  // For medium screens, fit 2 boxes per row
+  @media (max-width: 1199px) and (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  // For mobile, 1 box per row
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  @include card-style;
+  overflow: hidden;
+
+  .card-header {
+    background: $light-gray;
+    padding: $spacing-lg;
+    border-bottom: $border-width-sm solid $border-color;
+
+    .card-title {
+      font-size: $font-size-lg;
+      font-weight: 600;
+      color: $accent-color;
+      margin: 0;
+    }
+  }
+
+  .card-content {
+    padding: $spacing-lg;
+  }
+}
+
+// Bar Chart Styles
+.bar-chart {
+  height: $icon-size-xl * 3;
+}
+
+.chart-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.bar-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.bar-label {
+  min-width: 100px;
+  color: $text-secondary;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-wrapper {
+  flex: 1;
+  height: 20px;
+  background: $border-light;
+  border-radius: $border-radius-sm;
+  overflow: hidden;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    pointer-events: none;
+  }
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: $border-radius-sm;
+  transition: width 0.8s ease;
+  position: relative;
+  background: $red-gradient;
+  box-shadow: $shadow-sm;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+  }
+}
+
+.bar-value {
+  min-width: 35px;
+  color: $danger-color;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// Trends Section
+.trends-section {
+  margin-bottom: $spacing-xxl;
+
+  .trends-card {
+    @include card-style;
+    min-height: 400px;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $primary-blue, $accent-color, $success-color);
+      border-radius: $border-radius-lg $border-radius-lg 0 0;
+    }
+  }
+
+  .trends-chart {
+    height: $icon-size-xl * 7;
+    position: relative;
+    padding: $spacing-xl 0 $spacing-md 0;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: $spacing-xl;
+      bottom: $spacing-lg;
+      width: 2px;
+      background: rgba($primary-blue, 0.1);
+      border-radius: $border-radius-full;
+    }
+    
+    .chart-title {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: $text-primary;
+      font-size: $font-size-lg;
+      font-weight: 600;
+      margin-bottom: $spacing-md;
+      z-index: 10;
+    }
+    
+    .chart-subtitle {
+      position: absolute;
+      top: $spacing-md;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: $text-secondary;
+      font-size: $font-size-sm;
+      margin-bottom: $spacing-xl;
+      z-index: 10;
+    }
+    
+    // Grid lines for better readability - adjusted for 60%-90% scale
+    .grid-lines {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: $spacing-xl * 2;
+      bottom: $spacing-xl * 2;
+      pointer-events: none;
+      
+      .grid-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba($text-secondary, 0.1);
+        border-bottom: 1px dashed rgba($primary-blue, 0.2);
+        
+        &::after {
+          content: attr(data-value);
+          position: absolute;
+          left: -35px;
+          top: -8px;
+          font-size: $font-size-xs;
+          color: $text-secondary;
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .trend-bars {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      height: calc(100% - #{$spacing-xl * 3});
+      gap: $spacing-xs;
+      margin-top: $spacing-xl * 2;
+      padding: 0 $spacing-sm;
+      position: relative;
+      z-index: 5;
+    }
+
+    .trend-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      max-width: 70px;
+      height: 100%;
+      position: relative;
+      
+      &:hover {
+        .trend-bar-fill {
+          transform: scale(1.02);
+          box-shadow: 0 4px 12px rgba($primary-blue, 0.3);
+        }
+        
+        .trend-value {
+          transform: scale(1.1);
+          color: $primary-blue;
+        }
+      }
+
+      .trend-day {
+        color: $text-primary;
+        font-size: $font-size-sm;
+        font-weight: 600;
+        margin-top: $spacing-md;
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+
+      .trend-bar-wrapper {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .trend-bar-fill {
+        width: 100%;
+        border-radius: 2px 2px 0 0;
+        transition: all 0.3s ease;
+        position: relative;
+        background: $primary-blue;
+        min-height: 4px;
+        
+        // Highest value gets different color
+        &.highest {
+          background: linear-gradient(180deg, $success-color, $success-color-dark);
+          box-shadow: 0 2px 8px rgba($success-color, 0.3);
+        }
+        
+        &:hover {
+          background: linear-gradient(180deg, $primary-blue-dark, $primary-blue);
+          transform: scale(1.02);
+        }
+      }
+
+      .trend-value {
+        color: $text-primary;
+        font-size: 10px;
+        font-weight: 600;
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba($primary-blue, 0.1);
+        padding: 2px 6px;
+        border-radius: $border-radius-xs;
+        border: 1px solid rgba($primary-blue, 0.2);
+        transition: all 0.3s ease;
+        min-width: 30px;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 15;
+      }
+    }
+  }
+}
+
+// Responsive Design - Centralized Media Query
+@media (max-width: $breakpoint-md) {
+  .dashboard-container {
+    padding: $spacing-sm;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: $spacing-md;
+    text-align: center;
+    padding: $spacing-md $spacing-lg;
+  }
+
+  .header-center {
+    order: -1;
+    margin: 0;
+
+    .welcome-title {
+      font-size: $font-size-xl;
+    }
+
+    .welcome-subtitle {
+      font-size: $font-size-xs;
+    }
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bar-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+  }
+
+  .bar-label {
+    min-width: auto;
+  }
+
+  .activities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trends-section {
+    .trends-chart {
+      height: $icon-size-xl * 3.33;
+    }
+
+    .trend-bars {
+      flex-wrap: wrap;
+      height: auto;
+    }
+
+    .trend-bar {
+      height: $icon-size-xl * 5;
+    }
+  }
+
+  .factor-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .recommendation-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+// Responsive design for bar charts
+@media (max-width: 768px) {
+  .chart-card {
+    .card-content {
+      padding: 20px;
+      
+      .bar-chart {
+        .chart-container {
+          .bar-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: $spacing-xs;
+            
+            .bar-label {
+              flex: none;
+              font-size: $font-size-xs;
+            }
+            
+            .bar-wrapper {
+              width: 100%;
+              margin: 0;
+              height: 18px;
+            }
+            
+            .bar-value {
+              flex: none;
+              align-self: flex-end;
+              font-size: $font-size-xs;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Shimmer animation for bars
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

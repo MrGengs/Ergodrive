@@ -1,0 +1,411 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+
+// ERGODRIVE Theme - White & Blue Color Scheme
+// ===========================================
+
+// Primary Colors
+$primary-blue: #2B6EFF;
+$primary-blue-dark: #1e5cdb;
+$primary-blue-light: #4d7fff;
+$primary-blue-pale: #e7f1ff;
+
+// Neutral Colors
+$white: #ffffff;
+$light-gray: #F5F6FA;
+$medium-gray: #f8f9fa;
+$gray-100: #f1f3f4;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #2c3e50;
+$black: #000000;
+
+// Status Colors
+$success-green: #28a745;
+$warning-yellow: #ffc107;
+$danger-red: #dc3545;
+$info-blue: #17a2b8;
+$success-color: #10b981;
+$success-color-dark: #059669;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$info-color: #06b6d4;
+
+// Shadow Colors
+$shadow-light: rgba(0, 0, 0, 0.05);
+$shadow-medium: rgba(0, 0, 0, 0.08);
+$shadow-dark: rgba(0, 0, 0, 0.12);
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+// Gradient Colors
+$blue-gradient-1: linear-gradient(135deg, $primary-blue 0%, $primary-blue-dark 100%);
+$blue-gradient-2: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+$blue-gradient-3: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+$purple-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+$green-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+$red-gradient: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+
+// Text Colors
+$text-primary: #1f2937;
+$text-secondary: #6b7280;
+$accent-color: $primary-blue;
+
+// Background Colors
+$background-white: #ffffff;
+$background-light: #f8fafc;
+$background-gray: #f1f5f9;
+
+// Border Colors
+$border-color: #e5e7eb;
+$border-light: #f3f4f6;
+$border-dark: #d1d5db;
+
+// Typography
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-md: 15px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-xxl: 24px;
+$font-size-xxxl: 28px;
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Letter Spacing
+$letter-spacing-xs: 0.5px;
+$letter-spacing-sm: 1px;
+$letter-spacing-md: 1.5px;
+$letter-spacing-lg: 2px;
+
+// Spacing
+$spacing-xxs: 4px;
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 20px;
+$spacing-xl: 25px;
+$spacing-xxl: 30px;
+
+// Border Radius
+$border-radius-xs: 4px;
+$border-radius-sm: 8px;
+$border-radius-md: 12px;
+$border-radius-lg: 16px;
+$border-radius-full: 50%;
+
+// Legacy border radius variables for compatibility
+$border-radius: $border-radius-md;
+
+// Border Width
+$border-width: 1px;
+$border-width-sm: 1px;
+$border-width-md: 2px;
+$border-width-lg: 3px;
+
+// Icon Sizes
+$icon-size-sm: 24px;
+$icon-size-md: 32px;
+$icon-size-lg: 40px;
+$icon-size-xl: 60px;
+
+// Text Shadows
+$text-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+$text-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3);
+$text-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+// Blur Values
+$blur-sm: 5px;
+$blur-md: 10px;
+$blur-lg: 20px;
+
+// Container
+$container-max-width: 87.5rem;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.8s ease;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Mixins
+@mixin box-shadow($shadow: $shadow-light) {
+  box-shadow: 0 2px 10px $shadow;
+}
+
+@mixin box-shadow-hover($shadow: $shadow-medium) {
+  box-shadow: 0 4px 20px $shadow;
+}
+
+@mixin gradient-primary {
+  background: linear-gradient(135deg, $primary-blue 0%, $primary-blue-dark 100%);
+}
+
+@mixin gradient-hover {
+  background: linear-gradient(135deg, $primary-blue-light 0%, $primary-blue 100%);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Ionic Theme Variables
+:root {
+  // Primary colors
+  --ion-color-primary: #{$primary-blue};
+  --ion-color-primary-rgb: 43, 110, 255;
+  --ion-color-primary-contrast: #{$white};
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1e5cdb;
+  --ion-color-primary-tint: #4d7fff;
+
+  // Secondary colors
+  --ion-color-secondary: #{$gray-600};
+  --ion-color-secondary-rgb: 108, 117, 125;
+  --ion-color-secondary-contrast: #{$white};
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #5c636a;
+  --ion-color-secondary-tint: #7d858c;
+
+  // Success colors
+  --ion-color-success: #{$success-green};
+  --ion-color-success-rgb: 40, 167, 69;
+  --ion-color-success-contrast: #{$white};
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #228e3a;
+  --ion-color-success-tint: #42b857;
+
+  // Warning colors
+  --ion-color-warning: #{$warning-yellow};
+  --ion-color-warning-rgb: 255, 193, 7;
+  --ion-color-warning-contrast: #{$black};
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0a800;
+  --ion-color-warning-tint: #ffca2a;
+
+  // Danger colors
+  --ion-color-danger: #{$danger-red};
+  --ion-color-danger-rgb: 220, 53, 69;
+  --ion-color-danger-contrast: #{$white};
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #c0232d;
+  --ion-color-danger-tint: #e04d59;
+
+  // Light colors
+  --ion-color-light: #{$light-gray};
+  --ion-color-light-rgb: 245, 246, 250;
+  --ion-color-light-contrast: #{$gray-900};
+  --ion-color-light-contrast-rgb: 44, 62, 80;
+  --ion-color-light-shade: #d8d9dc;
+  --ion-color-light-tint: #f6f7fb;
+
+  // Medium colors
+  --ion-color-medium: #{$gray-600};
+  --ion-color-medium-rgb: 108, 117, 125;
+  --ion-color-medium-contrast: #{$white};
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #5c636a;
+  --ion-color-medium-tint: #7d858c;
+
+  // Dark colors
+  --ion-color-dark: #{$gray-900};
+  --ion-color-dark-rgb: 44, 62, 80;
+  --ion-color-dark-contrast: #{$white};
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #263340;
+  --ion-color-dark-tint: #415064;
+
+  // Background colors
+  --ion-background-color: #{$white};
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: #{$gray-900};
+  --ion-text-color-rgb: 44, 62, 80;
+  --ion-text-color-contrast: #{$white};
+  --ion-text-color-contrast-rgb: 255, 255, 255;
+
+  // Toolbar colors
+  --ion-toolbar-background: #{$white};
+  --ion-toolbar-border-color: #{$gray-200};
+  --ion-toolbar-text-color: #{$gray-900};
+  --ion-toolbar-color: #{$gray-900};
+
+  // Tab bar colors
+  --ion-tab-bar-background: #{$white};
+  --ion-tab-bar-border-color: #{$gray-200};
+  --ion-tab-bar-text-color: #{$gray-600};
+  --ion-tab-bar-text-color-active: #{$primary-blue};
+
+  // Card colors
+  --ion-card-background: #{$white};
+  --ion-card-border-color: #{$gray-200};
+  --ion-card-text-color: #{$gray-900};
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #{$gray-900};
+    --ion-background-color-rgb: 44, 62, 80;
+    --ion-text-color: #{$white};
+    --ion-text-color-rgb: 255, 255, 255;
+    --ion-text-color-contrast: #{$gray-900};
+    --ion-text-color-contrast-rgb: 44, 62, 80;
+    
+    --ion-toolbar-background: #{$gray-800};
+    --ion-toolbar-border-color: #{$gray-700};
+    --ion-toolbar-text-color: #{$white};
+    --ion-toolbar-color: #{$white};
+    
+    --ion-card-background: #{$gray-800};
+    --ion-card-border-color: #{$gray-700};
+    --ion-card-text-color: #{$white};
+  }
+}
+
+// Page-specific accent colors for unique characteristics
+$page-home-accent: #1e40af;      // Deep blue for home page
+$page-tes-kantuk-accent: #7c3aed;  // Purple for sleep test page
+$page-beban-kerja-kejadian-accent: #059669;  // Green for workload events page
+$page-beban-kerja-kemudi-accent: #dc2626;  // Red for workload driving page
+$page-waktu-reaksi-rem-accent: #ea580c;  // Orange for brake reaction time page
+$page-waktu-reaksi-kemudi-accent: #0891b2;  // Cyan for steering reaction time page
+
+// Section Title Mixin - consistent styling across all pages
+@mixin section-title {
+  font-size: $font-size-xl;
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid rgba($accent-color, 0.1);
+  position: relative;
+  letter-spacing: $letter-spacing-sm;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: $accent-color;
+    border-radius: 1px;
+  }
+  
+  // Hover effect
+  &:hover {
+    color: $accent-color;
+    transition: color $transition-base;
+  }
+}
+
+// Page-specific section title variations
+@mixin section-title-home {
+  @include section-title;
+  border-bottom-color: rgba($page-home-accent, 0.1);
+  
+  &::after {
+    background: $page-home-accent;
+    width: 80px;
+  }
+  
+  &:hover {
+    color: $page-home-accent;
+  }
+}
+
+@mixin section-title-tes-kantuk {
+  @include section-title;
+  border-bottom-color: rgba($page-tes-kantuk-accent, 0.1);
+  
+  &::after {
+    background: $page-tes-kantuk-accent;
+    width: 70px;
+  }
+  
+  &:hover {
+    color: $page-tes-kantuk-accent;
+  }
+}
+
+@mixin section-title-beban-kerja-kejadian {
+  @include section-title;
+  border-bottom-color: rgba($page-beban-kerja-kejadian-accent, 0.1);
+  
+  &::after {
+    background: $page-beban-kerja-kejadian-accent;
+    width: 75px;
+  }
+  
+  &:hover {
+    color: $page-beban-kerja-kejadian-accent;
+  }
+}
+
+@mixin section-title-beban-kerja-kemudi {
+  @include section-title;
+  border-bottom-color: rgba($page-beban-kerja-kemudi-accent, 0.1);
+  
+  &::after {
+    background: $page-beban-kerja-kemudi-accent;
+    width: 70px;
+  }
+  
+  &:hover {
+    color: $page-beban-kerja-kemudi-accent;
+  }
+}
+
+@mixin section-title-waktu-reaksi-rem {
+  @include section-title;
+  border-bottom-color: rgba($page-waktu-reaksi-rem-accent, 0.1);
+  
+  &::after {
+    background: $page-waktu-reaksi-rem-accent;
+    width: 65px;
+  }
+  
+  &:hover {
+    color: $page-waktu-reaksi-rem-accent;
+  }
+}
+
+@mixin section-title-waktu-reaksi-kemudi {
+  @include section-title;
+  border-bottom-color: rgba($page-waktu-reaksi-kemudi-accent, 0.1);
+  
+  &::after {
+    background: $page-waktu-reaksi-kemudi-accent;
+    width: 65px;
+  }
+  
+  &:hover {
+    color: $page-waktu-reaksi-kemudi-accent;
+  }
+}

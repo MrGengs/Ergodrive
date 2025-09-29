@@ -1,0 +1,327 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="assets/logo/snapedit_1758626403883-removebg-preview.png" alt="ERGODRIVE Logo" class="logo-img">
+      </div>
+    </div>
+    <div class="header-center">
+      <h1 class="welcome-title">Beban Kerja (Kejadian)</h1>
+      <p class="welcome-subtitle">Analisis respons pengemudi terhadap berbagai kejadian di jalan</p>
+    </div>
+    <div class="header-right">
+      <div class="action-buttons">
+        <ion-button (click)="refreshData()" fill="clear" size="small">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="exportData()" fill="clear" size="small">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
+        <ion-button class="profile-button" (click)="toggleProfilePopup()" fill="clear" size="small">
+          <ion-icon name="person-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Statistics Overview -->
+    <div class="stats-overview">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.totalEvents }}</div>
+          <div class="stat-label">Total Kejadian</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.averageResponseTime }}s</div>
+          <div class="stat-label">Waktu Respon Rata-rata</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.accuracyRate }}%</div>
+          <div class="stat-label">Akurasi Keputusan</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="heart-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.stressLevel }}%</div>
+          <div class="stat-label">Tingkat Stres</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Types Overview -->
+    <div class="event-types-section">
+      <h2 class="section-title">Tipe Kejadian</h2>
+      <div class="event-types-grid">
+        <div class="event-type-card" *ngFor="let event of eventTypes">
+          <div class="event-header">
+            <div class="event-icon">
+              <ion-icon [name]="event.icon"></ion-icon>
+            </div>
+            <div class="event-title">
+              <h3>{{ event.name }}</h3>
+              <div class="event-count">{{ event.count }} kejadian</div>
+            </div>
+            <div class="event-trend">
+              <ion-icon [name]="getTrendIcon(event.trend)" [style.color]="getTrendColor(event.trend)"></ion-icon>
+            </div>
+          </div>
+          <div class="event-stats">
+            <div class="event-stat">
+              <span class="stat-label">Respon:</span>
+              <span class="stat-value">{{ event.avgResponse }}s</span>
+            </div>
+            <div class="event-stat">
+              <span class="stat-label">Akurasi:</span>
+              <span class="stat-value">{{ event.accuracy }}%</span>
+            </div>
+            <div class="event-stat">
+              <span class="stat-label">Stres:</span>
+              <span class="stat-value">{{ event.stressLevel }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <h2 class="section-title">Analisis Performa</h2>
+      <div class="charts-grid">
+        <!-- Deteksi Kejadian Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">{{ chartData.deteksiSensor.title }}</h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div class="bar-item" *ngFor="let data of chartData.deteksiSensor.data">
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div 
+                      class="bar-fill" 
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Waktu Respon Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">{{ chartData.sistemRem.title }}</h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div class="bar-item" *ngFor="let data of chartData.sistemRem.data">
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div 
+                      class="bar-fill" 
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}s</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Akurasi Keputusan Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">{{ chartData.akurasiNavigasi.title }}</h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div class="bar-item" *ngFor="let data of chartData.akurasiNavigasi.data">
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div 
+                      class="bar-fill" 
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tingkat Stres Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">{{ chartData.sistemKeamanan.title }}</h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div class="bar-item" *ngFor="let data of chartData.sistemKeamanan.data">
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div 
+                      class="bar-fill" 
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Events -->
+    <div class="recent-events-section">
+      <h2 class="section-title">Kejadian Terbaru</h2>
+      <div class="recent-events-list">
+        <div class="event-item" *ngFor="let event of recentEvents">
+          <div class="event-status-indicator" [style.background]="getStatusColor(event.status)"></div>
+          <div class="event-icon">
+            <ion-icon [name]="getEventIcon(event.type)"></ion-icon>
+          </div>
+          <div class="event-details">
+            <div class="event-type">{{ event.type }}</div>
+            <div class="event-time">{{ event.time }}</div>
+          </div>
+          <div class="event-metrics">
+            <div class="metric">
+              <span class="metric-label">Respon:</span>
+              <span class="metric-value">{{ event.responseTime }}s</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Akurasi:</span>
+              <span class="metric-value">{{ event.accuracy }}%</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Stres:</span>
+              <span class="metric-value">{{ event.stressLevel }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Trends -->
+    <div class="trends-section">
+      <h2 class="section-title">Tren Performa Mingguan</h2>
+      <div class="trends-card">
+        <div class="trends-chart">
+          <div class="chart-title">Performa Mengemudi</div>
+          <div class="chart-subtitle">Skor rata-rata harian</div>
+          <div class="y-axis-labels">
+            <div class="y-label">90%</div>
+            <div class="y-label">82.5%</div>
+            <div class="y-label">75%</div>
+            <div class="y-label">67.5%</div>
+            <div class="y-label">60%</div>
+          </div>
+          <div class="grid-lines">
+            <div class="grid-line" style="bottom: 0%;" data-value="60%"></div>
+            <div class="grid-line" style="bottom: 25%;" data-value="67.5%"></div>
+            <div class="grid-line" style="bottom: 50%;" data-value="75%"></div>
+            <div class="grid-line" style="bottom: 75%;" data-value="82.5%"></div>
+            <div class="grid-line" style="bottom: 100%;" data-value="90%"></div>
+          </div>
+          <div class="trend-bars">
+            <div class="trend-bar" *ngFor="let trend of weeklyPerformanceData; let i = index">
+              <div class="trend-day">{{ trend.day }}</div>
+              <div class="trend-bar-wrapper">
+                <div class="trend-bar-fill" 
+                     [style.height.%]="((trend.value - 60) / 30) * 100"
+                     [class.highest]="trend.value === getHighestValue()"></div>
+              </div>
+              <div class="trend-value">{{ trend.score }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Popup -->
+  <div class="profile-popup" [class.active]="isProfilePopupOpen">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h3 class="popup-title">Profil Pengguna</h3>
+        <ion-button class="close-button" (click)="toggleProfilePopup()" fill="clear" size="small">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="popup-body">
+        <div *ngIf="isLoggedIn; else loginPrompt" class="user-info">
+          <div class="user-avatar">
+            {{ userInitials }}
+          </div>
+          <h4 class="user-name">{{ userName }}</h4>
+          <p class="user-email">{{ userEmail }}</p>
+          
+          <div class="user-stats">
+            <div class="stat-item">
+              <div class="stat-number">{{ userStats.totalTests }}</div>
+              <div class="stat-text">Total Tes</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ userStats.averageScore }}%</div>
+              <div class="stat-text">Skor Rata-rata</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ userStats.hoursDriven }}</div>
+              <div class="stat-text">Jam Mengemudi</div>
+            </div>
+          </div>
+        </div>
+        
+        <ng-template #loginPrompt>
+          <div class="login-prompt">
+            <div class="prompt-icon">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </div>
+            <h4 class="prompt-title">Masuk ke Akun Anda</h4>
+            <p class="prompt-text">Masuk untuk menyimpan progress dan melihat statistik lengkap Anda</p>
+            <div>
+              <ion-button class="login-button" (click)="login()" fill="solid">
+                Masuk
+              </ion-button>
+              <ion-button class="register-button" (click)="register()" fill="outline">
+                Daftar
+              </ion-button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

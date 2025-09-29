@@ -1,0 +1,7 @@
+{
+  "name": "projek_ergodrive",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

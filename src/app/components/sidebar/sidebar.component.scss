@@ -1,0 +1,351 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  overflow: hidden; /* Remove scrollbar */
+  padding: 60px 0 20px 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  /* Toggle Button */
+  .toggle-btn {
+    position: absolute;
+    top: 14px; /* Adjusted for better vertical alignment */
+    right: 14px;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .toggle-icon {
+      font-size: 26px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      margin: 0;
+      transform: translateY(1px); /* Fine-tune vertical position */
+      padding: 0;
+      position: relative;
+      z-index: 2;
+    }
+    
+    /* Add shadow that aligns with the icon */
+    &::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    
+    &:hover::after,
+    &:focus::after {
+      opacity: 1;
+    }
+  }
+
+  /* Profile Avatar */
+  .profile-avatar-container {
+    position: relative;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-placeholder {
+      font-size: 18px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+    }
+  }
+
+  .online-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background-color: #4CAF50;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Profile Section */
+  .profile-section {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+
+    /* Bottom profile section */
+    &.bottom-profile {
+      margin-top: auto;
+      padding: 15px 20px 20px;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: none;
+    }
+
+    .profile-details {
+      overflow: hidden;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .profile-name {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.2;
+        margin-bottom: 2px;
+        color: #333;
+        margin-bottom: 2px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .profile-email {
+        font-size: 12px;
+        color: #666;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        line-height: 1.3;
+        
+        .status-dot {
+          margin-right: 6px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  /* Menu items */
+  .menu-items {
+    padding: 0 10px; /* Reduced side padding */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+    overflow-y: auto; /* Add scroll if content overflows */
+    margin-top: 10px; /* Add some top margin */
+
+    &.bottom {
+      margin-top: auto;
+      padding-bottom: 0;
+    }
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align content to the left */
+    padding: 10px 16px;
+    color: #333333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 6px 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left; /* Align text to the left */
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    height: 44px; /* Fixed height for consistent vertical centering */
+
+    transition: all 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      background-color: #f5f5f5;
+      color: #3880ff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+      
+      .menu-icon {
+        transform: scale(1.05);
+      }
+    }
+
+    border-radius: 12px; /* Always show border radius */
+    
+    &.active {
+      background-color: #f0f7ff;
+      color: #3880ff;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(56, 128, 255, 0.15); /* Reduced opacity */
+      position: relative;
+      z-index: 1;
+      
+      .menu-icon {
+        color: #3880ff; /* Ensure icon color matches active state */
+      }
+    }
+
+    .menu-icon {
+      font-size: 20px;
+      min-width: 24px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      margin: 0 10px 0 0; /* Adjust right margin */
+      flex-shrink: 0; /* Prevent icon from shrinking */
+      will-change: transform;
+    }
+
+    .menu-text {
+      font-size: 14px;
+      transition: all 0.3s ease;
+      opacity: 1;
+      transform: translateX(0);
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      white-space: nowrap; /* Prevent text wrapping */ /* Ensure text is vertically centered */
+    }
+  }
+
+  /* Collapsed state */
+  &.collapsed {
+    width: 70px;
+    overflow: visible;
+    
+    .menu-item {
+      justify-content: center;
+      text-align: center;
+      padding: 10px 0;
+      padding: 12px 0;
+      margin: 0;
+      border-radius: 0;
+      position: relative;
+      
+      .menu-icon {
+        margin: 0;
+        font-size: 24px;
+        transition: all 0.3s ease;
+      }
+      
+      .menu-text {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translate(15px, -50%);
+        background: #ffffff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.15);
+        white-space: nowrap;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s ease;
+      }
+      
+      &:hover {
+        .menu-text {
+          display: block;
+          opacity: 1;
+          transform: translate(20px, -50%);
+        }
+      }
+    }
+    
+    .profile-section {
+      padding: 10px 0;
+      justify-content: center;
+      
+      .profile-details,
+      .profile-email {
+        display: none;
+      }
+      
+      .profile-avatar {
+        margin: 0 auto;
+        width: 36px;
+        height: 36px;
+      }
+    }
+    
+    .menu-items.bottom {
+      border-top: 1px solid #f0f0f0;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+  }
+  
+  /* Hover effect for expanded sidebar */
+  &:not(.collapsed) {
+    .menu-item {
+      .menu-icon {
+        transform: none;
+      }
+    }
+  }
+}

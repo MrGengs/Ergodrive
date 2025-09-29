@@ -1,0 +1,391 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <div class="logo">
+        <img
+          src="assets/logo/snapedit_1758626403883-removebg-preview.png"
+          alt="ERGODRIVE Logo"
+          class="logo-img"
+        />
+      </div>
+    </div>
+    <div class="header-center">
+      <h1 class="welcome-title">Waktu Reaksi Kemudi</h1>
+      <p class="welcome-subtitle">
+        Analisis kecepatan reaksi kemudi dan presisi kontrol setir
+      </p>
+    </div>
+    <div class="header-right">
+      <div class="action-buttons">
+        <ion-button (click)="startSteeringTest()" fill="solid" size="small">
+          <ion-icon name="play-outline"></ion-icon>
+          Mulai Tes
+        </ion-button>
+        <ion-button (click)="refreshData()" fill="clear" size="small">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="exportData()" fill="clear" size="small">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Current Performance -->
+    <div class="current-performance">
+      <div class="performance-card">
+        <div class="performance-header">
+          <h2>Performa Kemudi Saat Ini</h2>
+          <div
+            class="performance-status"
+            [style.color]="getReactionTimeColor(statistics.averageReactionTime)"
+          >
+            {{ statistics.averageReactionTime <= 0.5 ? 'Sempurna' :
+            statistics.averageReactionTime <= 0.8 ? 'Baik' :
+            statistics.averageReactionTime <= 1.2 ? 'Cukup' : 'Perlu Perbaikan'
+            }}
+          </div>
+        </div>
+        <div class="performance-content">
+          <div class="performance-metric">
+            <div
+              class="metric-value"
+              [style.color]="getReactionTimeColor(statistics.averageReactionTime)"
+            >
+              {{ statistics.averageReactionTime }}s
+            </div>
+            <div class="metric-label">Waktu Reaksi Rata-rata</div>
+          </div>
+          <div class="performance-metric">
+            <div class="metric-value">{{ statistics.bestReactionTime }}s</div>
+            <div class="metric-label">Waktu Terbaik</div>
+          </div>
+          <div class="performance-metric">
+            <div class="metric-value">{{ statistics.precisionRate }}%</div>
+            <div class="metric-label">Presisi Kemudi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-overview">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="car-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.totalTests }}</div>
+          <div class="stat-label">Total Tes</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="trending-up-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">+{{ statistics.improvementRate }}%</div>
+          <div class="stat-label">Peningkatan</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.precisionRate }}%</div>
+          <div class="stat-label">Akurasi Kemudi</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ statistics.testDuration }}</div>
+          <div class="stat-label">Durasi Tes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steering Scenarios -->
+    <div class="steering-scenarios-section">
+      <h2 class="section-title">Skenario Kemudi</h2>
+      <div class="steering-scenarios-grid">
+        <div class="steering-card" *ngFor="let scenario of steeringScenarios">
+          <div class="steering-header">
+            <div class="scenario-title">{{ scenario.scenario }}</div>
+            <div
+              class="difficulty-indicator"
+              [style.background]="getDifficultyColor(scenario.difficulty)"
+            >
+              {{ scenario.difficulty }}
+            </div>
+          </div>
+          <div class="steering-metrics">
+            <div class="steering-metric">
+              <span class="metric-label">Reaksi:</span>
+              <span
+                class="metric-value"
+                [style.color]="getReactionTimeColor(scenario.reactionTime)"
+              >
+                {{ scenario.reactionTime }}s
+              </span>
+            </div>
+            <div class="steering-metric">
+              <span class="metric-label">Presisi:</span>
+              <span class="metric-value">{{ scenario.precision }}%</span>
+            </div>
+            <div class="steering-metric">
+              <span class="metric-label">Stabilitas:</span>
+              <span class="metric-value">{{ scenario.stability }}%</span>
+            </div>
+          </div>
+          <div
+            class="steering-status"
+            [style.color]="getStatusColor(scenario.status)"
+          >
+            {{ getStatusText(scenario.status) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <h2 class="section-title">Analisis Reaksi Kemudi</h2>
+      <div class="charts-grid">
+        <!-- Waktu Reaksi Steering Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              {{ chartData.waktuReaksiSteering.title }}
+            </h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div
+                  class="bar-item"
+                  *ngFor="let data of chartData.waktuReaksiSteering.data"
+                >
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div
+                      class="bar-fill"
+                      [style.width.%]="data.percentage"
+                      [style.background]="getReactionTimeColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}s</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Presisi Kemudi Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">{{ chartData.presisiKemudi.title }}</h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div
+                  class="bar-item"
+                  *ngFor="let data of chartData.presisiKemudi.data"
+                >
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div
+                      class="bar-fill"
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stabilitas Kemudi Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">{{ chartData.stabilitasKemudi.title }}</h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div
+                  class="bar-item"
+                  *ngFor="let data of chartData.stabilitasKemudi.data"
+                >
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div
+                      class="bar-fill"
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Koordinasi Tangan-Mata Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">
+              {{ chartData.koordinasiTanganMata.title }}
+            </h3>
+          </div>
+          <div class="card-content">
+            <div class="bar-chart">
+              <div class="chart-container">
+                <div
+                  class="bar-item"
+                  *ngFor="let data of chartData.koordinasiTanganMata.data"
+                >
+                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-wrapper">
+                    <div
+                      class="bar-fill"
+                      [style.width.%]="data.percentage"
+                      [style.background]="getBarColor(data.value)"
+                    ></div>
+                  </div>
+                  <div class="bar-value">{{ data.value }}%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Driving Factors -->
+    <div class="factors-section">
+      <h2 class="section-title">Faktor yang Mempengaruhi Kemudi</h2>
+      <div class="factors-grid">
+        <div class="factor-card" *ngFor="let factor of drivingFactors">
+          <div class="factor-icon">
+            <ion-icon
+              [name]="factor.icon"
+              [style.color]="factor.color"
+            ></ion-icon>
+          </div>
+          <div class="factor-content">
+            <h3>{{ factor.factor }}</h3>
+            <div class="factor-impact" [style.color]="factor.color">
+              {{ factor.impact }}
+            </div>
+            <p>{{ factor.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Tests -->
+    <div class="recent-tests-section">
+      <h2 class="section-title">Tes Terbaru</h2>
+      <div class="recent-tests-list">
+        <div class="test-item" *ngFor="let test of recentTests">
+          <div
+            class="test-status"
+            [style.background]="getStatusColor(test.status)"
+          ></div>
+          <div class="test-details">
+            <div class="test-time">{{ test.time }}</div>
+            <div class="test-metrics">
+              <div class="test-metric">
+                <span>Reaksi: {{ test.reactionTime }}s</span>
+              </div>
+              <div class="test-metric">
+                <span>Skenario: {{ test.scenario }}</span>
+              </div>
+              <div class="test-metric">
+                <span>Presisi: {{ test.precision }}%</span>
+              </div>
+              <div class="test-metric">
+                <span>Stabilitas: {{ test.stability }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Training Recommendations -->
+    <div class="recommendations-section">
+      <h2 class="section-title">Rekomendasi Pelatihan</h2>
+      <div class="recommendations-grid">
+        <div
+          class="recommendation-card"
+          *ngFor="let rec of trainingRecommendations"
+        >
+          <div class="recommendation-icon">
+            <ion-icon
+              [name]="rec.icon"
+              [style.color]="getPriorityColor(rec.priority)"
+            ></ion-icon>
+          </div>
+          <div class="recommendation-content">
+            <h3>{{ rec.title }}</h3>
+            <p>{{ rec.description }}</p>
+          </div>
+          <div class="recommendation-priority">
+            <span
+              class="priority-badge"
+              [style.background]="getPriorityColor(rec.priority)"
+            >
+              {{ rec.priority === 'high' ? 'Tinggi' : rec.priority === 'medium'
+              ? 'Sedang' : 'Rendah' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Trends -->
+    <div class="trends-section">
+      <h2 class="section-title">Tren Performa Mingguan</h2>
+      <div class="trends-card">
+        <div class="trends-chart">
+          <div class="chart-title">Waktu Reaksi Kemudi</div>
+          <div class="chart-subtitle">Skor rata-rata harian</div>
+          <div class="grid-lines">
+            <div class="grid-line" style="bottom: 0%" data-value="60%"></div>
+            <div class="grid-line" style="bottom: 25%" data-value="67.5%"></div>
+            <div class="grid-line" style="bottom: 50%" data-value="75%"></div>
+            <div class="grid-line" style="bottom: 75%" data-value="82.5%"></div>
+            <div class="grid-line" style="bottom: 100%" data-value="90%"></div>
+          </div>
+          <div class="trend-bars">
+            <div
+              class="trend-bar"
+              *ngFor="let trend of weeklyPerformanceData; let i = index"
+            >
+              <div class="trend-day">{{ trend.day }}</div>
+              <div class="trend-bar-wrapper">
+                <div
+                  class="trend-bar-fill"
+                  [style.height.%]="((trend.value - 60) / 30) * 100"
+                  [class.highest]="trend.value === getHighestValue()"
+                ></div>
+              </div>
+              <div class="trend-value">{{ trend.score }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

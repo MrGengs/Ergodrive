@@ -1,0 +1,39 @@
+ion-content {
+  --background: #f0f2f5;
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+}
+
+.logo {
+  max-width: 150px;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1e2023;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 60px;
+}
+
+.login-button {
+  --background: #007bff; // Warna biru primer, bisa diganti
+  --background-activated: #0056b3;
+  --border-radius: 30px;
+  font-weight: bold;
+  height: 50px;
+}
