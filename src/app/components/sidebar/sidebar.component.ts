@@ -51,6 +51,24 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
+  // Handle image loading errors
+  handleImageError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    if (this.user?.displayName) {
+      // If image fails to load, show the first letter of the display name
+      const placeholder = document.createElement('div');
+      placeholder.className = 'avatar-placeholder';
+      placeholder.textContent = this.user.displayName[0].toUpperCase();
+      
+      // Replace the image with the placeholder
+      const container = imgElement.parentElement;
+      if (container) {
+        container.innerHTML = '';
+        container.appendChild(placeholder);
+      }
+    }
+  }
+
   // Fungsi untuk toggle sidebar
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;

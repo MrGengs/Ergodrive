@@ -22,6 +22,9 @@
       "es2022", 
       "dom"
     ],
+    "paths": {
+      "@app/*": ["src/app/*"]
+    },
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

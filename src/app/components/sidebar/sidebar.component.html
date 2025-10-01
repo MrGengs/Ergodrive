@@ -87,6 +87,8 @@
           [src]="user.photoURL"
           alt="Profile"
           class="avatar-img"
+          referrerpolicy="no-referrer"
+          (error)="handleImageError($event)"
         />
         <div *ngIf="!user.photoURL" class="avatar-placeholder">
           {{ (user.displayName || "U")[0] | uppercase }}

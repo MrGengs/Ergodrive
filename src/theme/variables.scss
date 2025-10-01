@@ -98,6 +98,28 @@ $spacing-sm: 12px;
 $spacing-md: 16px;
 $spacing-lg: 20px;
 $spacing-xl: 25px;
+
+// Card Style Mixin
+@mixin card-style {
+  background: $white;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-sm;
+  padding: $spacing-md;
+  transition: all 0.3s ease;
+  border: 1px solid $border-color;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+// Border Radius
+$border-radius-xs: 4px;
+$border-radius-sm: 6px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
 $spacing-xxl: 30px;
 
 // Border Radius

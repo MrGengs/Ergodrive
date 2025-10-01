@@ -36,13 +36,20 @@
 // Dashboard Content
 .dashboard-content {
   max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 $spacing-md $spacing-md;
-  width: 100%;
+  margin: 0 0 0 auto; /* Align to the right by setting left margin to auto */
+  padding: 0 $spacing-md $spacing-md $spacing-md; /* Keep right padding consistent */
+  width: calc(100% - 80px); /* Reduce width to account for sidebar */
   box-sizing: border-box;
   
   @media (max-width: $breakpoint-md) {
-    padding: 0 $spacing-sm $spacing-sm;
+    width: calc(100% - 60px); /* Adjust for smaller screens */
+    padding: 0 $spacing-sm $spacing-sm $spacing-sm;
+    margin-left: auto; /* Keep right-aligned */
+  }
+  
+  @media (max-width: $breakpoint-sm) {
+    width: 100%; /* Full width on very small screens */
+    padding: 0 $spacing-xs $spacing-xs $spacing-xs;
   }
 }
 
@@ -62,6 +69,7 @@ app-shared-header {
 .stats-overview {
   margin-top: $spacing-lg;
   margin-bottom: $spacing-xl;
+  margin-left: 0; /* Remove left margin */
   
   @media (max-width: $breakpoint-md) {
     margin-top: $spacing-md;
@@ -73,31 +81,31 @@ app-shared-header {
 
 // Dashboard Content
 .dashboard-content {
-  max-width: $container-max-width;
-  margin: 2rem auto 0;
-  padding: 2rem 1.5rem;
+  max-width: calc(100% - 80px); /* Reduce width to account for sidebar */
+  margin: 2rem 0 0 auto; /* Align to the right */
+  padding: 0 1.5rem 2rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 
-  // Add spacing between sections
   & > *:not(:last-child) {
     margin-bottom: 2rem;
   }
+  
+  @media (max-width: $breakpoint-md) {
+    max-width: calc(100% - 60px);
+    padding: 0 1rem 2rem 1rem;
+  }
+  
+  @media (max-width: $breakpoint-sm) {
+    max-width: 100%;
+    padding: 0 0.75rem 1.5rem 0.75rem;
+  }
 }
 
-// Statistics Overview
+// Stats Overview Section
 .stats-overview {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: $spacing-lg;
-  margin-bottom: $spacing-xxl;
-
-  // For larger screens, try to fit 4 boxes perfectly
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 1400px;
-    margin: 0 auto $spacing-xxl;
-  }
-
-  // For medium screens, fit 2 boxes per row
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   @media (max-width: 1199px) and (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     max-width: 800px;
@@ -519,65 +527,61 @@ app-shared-header {
 
     .activity-card {
       @include card-style;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center content horizontally */
+      text-align: center; /* Center text */
+      padding: $spacing-lg; /* More padding */
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
 
       .activity-header {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
+        width: 100%;
         margin-bottom: $spacing-md;
       }
 
       .activity-icon {
-        width: $icon-size-lg;
-        height: $icon-size-lg;
-        border-radius: $border-radius-md;
-        background: $blue-gradient-2;
+        width: 80px; /* Larger fixed width */
+        height: 80px; /* Larger fixed height */
+        border-radius: 50%; /* Make it circular */
+        background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: $spacing-xs $spacing-md;
-        border-radius: $border-radius-lg;
-        font-size: $font-size-xs;
-        font-weight: 500;
-        text-align: center;
-        min-width: $icon-size-lg * 2.67;
-
-        &.completed {
-          background: rgba($success-color, 0.1);
-          color: $success-color;
-          border: $border-width-sm solid rgba($success-color, 0.2);
+        margin: 0 auto $spacing-lg; /* Center the icon and add bottom margin */
+        padding: $spacing-lg;
+        font-size: 40px; /* Larger icon */
+        color: white; /* White icon color */
+        box-shadow: 0 6px 16px rgba(74, 144, 226, 0.25);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        
+        /* Glow effect */
+        &::after {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          right: -50%;
+          bottom: -50%;
+          background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+          transform: rotate(30deg);
         }
-
-        &.success {
-          background: rgba($info-color, 0.1);
-          color: $info-color;
-          border: $border-width-sm solid rgba($info-color, 0.2);
+        
+        /* Icon styles */
+        ion-icon {
+          position: relative;
+          z-index: 1;
+          filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
         }
-
-        &.warning {
-          background: rgba($warning-color, 0.1);
-          color: $warning-color;
-          border: $border-width-sm solid rgba($warning-color, 0.2);
-        }
-      }
-
-      .activity-details {
-        p {
-          font-size: $font-size-sm;
-          color: $text-secondary;
-          margin: 0;
-          padding: $spacing-md;
-          background: $light-gray;
-          border-radius: $border-radius-md;
-          border-left: $border-width-md solid $accent-color;
-          line-height: 1.5;
-        }
-      }
-
-      .recommendation-action {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: $spacing-md;
 
         .btn-action {
           padding: $spacing-sm $spacing-md;
