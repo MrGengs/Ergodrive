@@ -1,29 +1,17 @@
 <div class="dashboard-container">
   <!-- Header -->
-  <div class="dashboard-header">
-    <div class="header-left">
-      <div class="logo">
-        <img src="assets/logo/snapedit_1758626403883-removebg-preview.png" alt="ERGODRIVE Logo" class="logo-img">
-      </div>
+  <app-shared-header 
+    [pageTitle]="'Beban Kerja (Kejadian)'"
+    [pageSubtitle]="'Analisis respons pengemudi terhadap berbagai kejadian di jalan'">
+    <div class="action-buttons" slot="actions">
+      <ion-button (click)="refreshData()" fill="clear" size="small">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="exportData()" fill="clear" size="small">
+        <ion-icon name="download-outline"></ion-icon>
+      </ion-button>
     </div>
-    <div class="header-center">
-      <h1 class="welcome-title">Beban Kerja (Kejadian)</h1>
-      <p class="welcome-subtitle">Analisis respons pengemudi terhadap berbagai kejadian di jalan</p>
-    </div>
-    <div class="header-right">
-      <div class="action-buttons">
-        <ion-button (click)="refreshData()" fill="clear" size="small">
-          <ion-icon name="refresh-outline"></ion-icon>
-        </ion-button>
-        <ion-button (click)="exportData()" fill="clear" size="small">
-          <ion-icon name="download-outline"></ion-icon>
-        </ion-button>
-        <ion-button class="profile-button" (click)="toggleProfilePopup()" fill="clear" size="small">
-          <ion-icon name="person-outline"></ion-icon>
-        </ion-button>
-      </div>
-    </div>
-  </div>
+  </app-shared-header>
 
   <div class="dashboard-content">
     <!-- Statistics Overview -->

@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
+import { SharedHeaderComponent } from '../components/shared-header/shared-header.component';
 
 @NgModule({
   declarations: [
-    SidebarComponent
+    SidebarComponent,
+    SharedHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -14,7 +16,8 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
     IonicModule
   ],
   exports: [
-    SidebarComponent
+    SidebarComponent,
+    SharedHeaderComponent
   ]
 })
 export class SharedModule { }

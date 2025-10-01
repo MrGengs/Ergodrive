@@ -1,0 +1,22 @@
+<div class="dashboard-header">
+  <div class="header-left">
+    <div class="logo">
+      <img
+        src="assets/logo/snapedit_1758626403883-removebg-preview.png"
+        alt="ERGODRIVE Logo"
+        class="logo-img"
+      />
+    </div>
+  </div>
+  <div class="header-center">
+    <h1 class="welcome-title">{{ pageTitle }}</h1>
+    <p class="welcome-subtitle" *ngIf="pageSubtitle">
+      {{ pageSubtitle }}
+    </p>
+  </div>
+  <div class="header-right">
+    <div class="header-actions">
+      <ng-content select="[slot='actions']"></ng-content>
+    </div>
+  </div>
+</div>

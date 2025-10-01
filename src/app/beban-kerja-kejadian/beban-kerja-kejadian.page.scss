@@ -1,5 +1,5 @@
 // Import theme variables
-@import '../../theme/variables';
+@import "../../theme/variables";
 
 // Mixin for card styles
 @mixin card-style {
@@ -20,14 +20,43 @@
 
 // Dashboard Container
 .dashboard-container {
-  height: 100vh;
+  min-height: 100vh;
   background: $background-light;
-  padding: 1rem;
-  overflow-y: auto;
+  padding: 0;
   overflow-x: hidden;
+  padding-top: 100px; // Space for fixed header
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
-    padding: 0.5rem;
+    padding-top: 90px;
+  }
+}
+
+// Header Wrapper
+app-shared-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  background: $blue-gradient-2;
+  box-shadow: $shadow-md;
+}
+
+// Dashboard Content
+.dashboard-content {
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 1.5rem 1.5rem;
+
+  // Add spacing between sections
+  & > *:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 0.25rem;
   }
 }
 
@@ -57,7 +86,7 @@
       padding: 0.5rem;
       display: inline-block;
       border: 1px solid rgba(255, 255, 255, 0.3);
-      
+
       .logo-img {
         height: 40px;
         width: auto;
@@ -111,36 +140,33 @@
   }
 }
 
-// Dashboard Content
-.dashboard-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-
-// Stats Overview
+// Statistics Overview
 .stats-overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-  margin-top: 20px;
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-xl;
   
+  @media (max-width: $breakpoint-md) {
+    margin-top: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+
   // For larger screens, try to fit 4 boxes perfectly
   @media (min-width: 1200px) {
     grid-template-columns: repeat(4, 1fr);
     max-width: 1400px;
     margin: 20px auto 30px;
   }
-  
+
   // For medium screens, fit 2 boxes per row
   @media (max-width: 1199px) and (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     max-width: 800px;
     margin: 20px auto 30px;
   }
-  
+
   // For mobile, 1 box per row
   @media (max-width: 767px) {
     grid-template-columns: 1fr;
@@ -176,7 +202,7 @@
   &:hover {
     transform: translateY(-1px);
     box-shadow: $shadow-md;
-    
+
     .stat-icon {
       transform: scale(1.1);
     }
@@ -248,7 +274,6 @@
   }
 }
 
-
 // Event Types Section
 .event-types-section {
   margin-bottom: 2rem;
@@ -268,33 +293,33 @@
   padding: 10px 0;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  
+
   // Hide scrollbar but keep functionality
   &::-webkit-scrollbar {
     height: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 3px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.5);
   }
-  
+
   // Each card should snap to position
   .event-type-card {
     flex: 0 0 300px;
     scroll-snap-align: start;
     min-width: 300px;
   }
-  
+
   // For mobile, make cards smaller
   @media (max-width: 767px) {
     .event-type-card {
@@ -346,7 +371,7 @@
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -358,11 +383,11 @@
   &:hover {
     transform: translateY(-1px);
     box-shadow: $shadow-md;
-    
+
     &::before {
       height: 50%;
     }
-    
+
     .event-icon {
       transform: scale(1.1);
     }
@@ -415,17 +440,17 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 1rem;
-    
+
     // For larger screens, try to fit 3-4 boxes perfectly
     @media (min-width: 1200px) {
       grid-template-columns: repeat(3, 1fr);
     }
-    
+
     // For medium screens, fit 2 boxes per row
     @media (max-width: 1199px) and (min-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
     }
-    
+
     // For mobile, 1 box per row
     @media (max-width: 767px) {
       grid-template-columns: 1fr;
@@ -454,7 +479,6 @@
   }
 }
 
-
 // Charts Section
 .charts-section {
   margin-bottom: 2rem;
@@ -466,7 +490,7 @@
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto 30px;
-  
+
   // For medium screens and mobile, make it 1 column
   @media (max-width: 991px) {
     grid-template-columns: 1fr;
@@ -535,7 +559,7 @@
         align-items: center;
         gap: $spacing-md;
         margin-bottom: $spacing-md;
-        
+
         &:last-child {
           margin-bottom: 0;
         }
@@ -557,15 +581,20 @@
           border-radius: $border-radius-sm;
           overflow: hidden;
           position: relative;
-          
+
           &::before {
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+            background: linear-gradient(
+              90deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.1) 50%,
+              transparent 100%
+            );
             pointer-events: none;
           }
 
@@ -576,15 +605,20 @@
             position: relative;
             background: $green-gradient;
             box-shadow: $shadow-sm;
-            
+
             &::after {
-              content: '';
+              content: "";
               position: absolute;
               top: 0;
               left: 0;
               right: 0;
               bottom: 0;
-              background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+              background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 100%
+              );
               animation: shimmer 2s infinite;
             }
           }
@@ -864,7 +898,6 @@
   }
 }
 
-
 // Recent Events Section
 .recent-events-section {
   margin-bottom: 2rem;
@@ -907,7 +940,7 @@
   &:hover {
     transform: translateY(-1px);
     box-shadow: $shadow-md;
-    
+
     .event-icon {
       transform: scale(1.1);
     }
@@ -979,7 +1012,6 @@
   }
 }
 
-
 // Performance Trends Section
 .trends-section {
   margin-bottom: 2rem;
@@ -991,15 +1023,20 @@
   position: relative;
   overflow: hidden;
   padding: $spacing-xl;
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, $primary-blue, $accent-color, $success-color);
+    background: linear-gradient(
+      90deg,
+      $primary-blue,
+      $accent-color,
+      $success-color
+    );
     border-radius: $border-radius-lg $border-radius-lg 0 0;
     z-index: 15;
   }
@@ -1010,7 +1047,7 @@
   position: relative;
   padding: $spacing-lg 0 $spacing-md 0;
   overflow: hidden;
-  
+
   .chart-title {
     position: absolute;
     top: 0;
@@ -1082,7 +1119,7 @@
       padding-right: $spacing-xs;
     }
   }
-  
+
   .trend-bars {
     display: flex;
     justify-content: space-between;
@@ -1103,13 +1140,13 @@
     height: 100%;
     position: relative;
     margin-bottom: $spacing-xs;
-    
+
     &:hover {
       .trend-bar-fill {
         transform: scale(1.02);
         box-shadow: 0 4px 12px rgba($primary-blue, 0.3);
       }
-      
+
       .trend-value {
         transform: scale(1.1);
         color: $primary-blue;
@@ -1135,13 +1172,17 @@
       background: $primary-blue;
       min-height: 4px;
       max-height: 100%;
-      
+
       // Highest value gets different color
       &.highest {
-        background: linear-gradient(180deg, $success-color, $success-color-dark);
+        background: linear-gradient(
+          180deg,
+          $success-color,
+          $success-color-dark
+        );
         box-shadow: 0 2px 8px rgba($success-color, 0.3);
       }
-      
+
       &:hover {
         background: linear-gradient(180deg, $primary-blue-dark, $primary-blue);
         transform: scale(1.02);

@@ -1,32 +1,65 @@
 <div class="sidebar" [class.collapsed]="isCollapsed">
   <!-- Toggle Button -->
   <div class="toggle-btn" (click)="toggleSidebar()">
-    <ion-icon [name]="isCollapsed ? 'menu' : 'close'" class="toggle-icon"></ion-icon>
+    <ion-icon
+      [name]="isCollapsed ? 'menu' : 'close'"
+      class="toggle-icon"
+    ></ion-icon>
   </div>
-  
+
   <!-- Menu Items -->
   <div class="menu-items">
-    <a [routerLink]="['/home']" class="menu-item" [class.active]="isActive('/home')" [title]="isCollapsed ? 'Beranda' : ''">
+    <a
+      [routerLink]="['/home']"
+      class="menu-item"
+      [class.active]="isActive('/home')"
+      [title]="isCollapsed ? 'Beranda' : ''"
+    >
       <ion-icon name="home-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Beranda</span>
     </a>
-    <a [routerLink]="['/beban-kerja-kemudi']" class="menu-item" [class.active]="isActive('/beban-kerja-kemudi')" [title]="isCollapsed ? 'Beban Kerja (Kemudi)' : ''">
+    <a
+      [routerLink]="['/beban-kerja-kemudi']"
+      class="menu-item"
+      [class.active]="isActive('/beban-kerja-kemudi')"
+      [title]="isCollapsed ? 'Beban Kerja (Kemudi)' : ''"
+    >
       <ion-icon name="speedometer-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Beban Kerja (Kemudi)</span>
     </a>
-    <a [routerLink]="['/beban-kerja-kejadian']" class="menu-item" [class.active]="isActive('/beban-kerja-kejadian')" [title]="isCollapsed ? 'Beban Kerja (Kejadian)' : ''">
+    <a
+      [routerLink]="['/beban-kerja-kejadian']"
+      class="menu-item"
+      [class.active]="isActive('/beban-kerja-kejadian')"
+      [title]="isCollapsed ? 'Beban Kerja (Kejadian)' : ''"
+    >
       <ion-icon name="alert-circle-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Beban Kerja (Kejadian)</span>
     </a>
-    <a [routerLink]="['/tes-kantuk']" class="menu-item" [class.active]="isActive('/tes-kantuk')" [title]="isCollapsed ? 'Tes Kantuk' : ''">
+    <a
+      [routerLink]="['/tes-kantuk']"
+      class="menu-item"
+      [class.active]="isActive('/tes-kantuk')"
+      [title]="isCollapsed ? 'Tes Kantuk' : ''"
+    >
       <ion-icon name="bed-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Tes Kantuk</span>
     </a>
-    <a [routerLink]="['/waktu-reaksi-rem']" class="menu-item" [class.active]="isActive('/waktu-reaksi-rem')" [title]="isCollapsed ? 'Waktu Reaksi Rem' : ''">
+    <a
+      [routerLink]="['/waktu-reaksi-rem']"
+      class="menu-item"
+      [class.active]="isActive('/waktu-reaksi-rem')"
+      [title]="isCollapsed ? 'Waktu Reaksi Rem' : ''"
+    >
       <ion-icon name="time-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Waktu Reaksi Rem</span>
     </a>
-    <a [routerLink]="['/waktu-reaksi-kemudi']" class="menu-item" [class.active]="isActive('/waktu-reaksi-kemudi')" [title]="isCollapsed ? 'Waktu Reaksi Kemudi' : ''">
+    <a
+      [routerLink]="['/waktu-reaksi-kemudi']"
+      class="menu-item"
+      [class.active]="isActive('/waktu-reaksi-kemudi')"
+      [title]="isCollapsed ? 'Waktu Reaksi Kemudi' : ''"
+    >
       <ion-icon name="car-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Waktu Reaksi Kemudi</span>
     </a>
@@ -35,7 +68,11 @@
   <div class="spacer"></div>
 
   <div class="menu-items bottom">
-    <a (click)="logout()" class="menu-item logout-item" [title]="isCollapsed ? 'Logout' : ''">
+    <a
+      (click)="logout()"
+      class="menu-item logout-item"
+      [title]="isCollapsed ? 'Logout' : ''"
+    >
       <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Logout</span>
     </a>
@@ -45,17 +82,23 @@
   <div class="profile-section bottom-profile" *ngIf="user">
     <div class="profile-avatar-container">
       <div class="profile-avatar" [title]="user.displayName || 'User'">
-        <img *ngIf="user.photoURL" [src]="user.photoURL" alt="Profile" class="avatar-img">
+        <img
+          *ngIf="user.photoURL"
+          [src]="user.photoURL"
+          alt="Profile"
+          class="avatar-img"
+        />
         <div *ngIf="!user.photoURL" class="avatar-placeholder">
-          {{ (user.displayName || 'U')[0] | uppercase }}
+          {{ (user.displayName || "U")[0] | uppercase }}
         </div>
       </div>
       <span class="online-indicator"></span>
     </div>
     <div class="profile-details" *ngIf="!isCollapsed">
-      <div class="profile-name">{{ user.displayName || 'User' }}</div>
+      <div class="profile-name">{{ user.displayName || "User" }}</div>
       <div class="profile-email" [title]="user.email">
-        {{ user.email || '' }}
+        {{ user.email || "" }}
       </div>
     </div>
   </div>
+</div>

@@ -1,5 +1,5 @@
 // Import theme variables
-@import '../../theme/variables';
+@import "../../theme/variables";
 
 // Mixin for card styles
 @mixin card-style {
@@ -22,24 +22,46 @@
 
 // Dashboard Container
 .dashboard-container {
-  height: 100vh;
+  min-height: 100vh;
   background: $background-light;
-  padding: $spacing-md;
-  overflow-y: auto;
+  padding: 0;
   overflow-x: hidden;
+  padding-top: 100px; // Space for fixed header
+  box-sizing: border-box;
 
   @media (max-width: $breakpoint-md) {
-    padding: $spacing-sm;
+    padding-top: 90px;
   }
+}
+
+// Header Wrapper
+app-shared-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  background: $blue-gradient-2;
+  box-shadow: $shadow-md;
 }
 
 // Dashboard Content
 .dashboard-content {
   max-width: $container-max-width;
   margin: 0 auto;
-  padding: $spacing-lg $spacing-xl;
+  padding: 0 $spacing-lg $spacing-lg;
   box-sizing: border-box;
-  margin-top: $spacing-md;
+
+  // Add spacing between sections
+  & > *:not(:last-child) {
+    margin-bottom: $spacing-xxl;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+    margin-top: $spacing-sm;
+  }
 }
 
 // Header Styles
@@ -129,14 +151,12 @@
   }
 }
 
-// Performance Section
 .current-performance {
-  margin-bottom: $spacing-xxl;
+  margin: $spacing-xxl 0 $spacing-xxl;
 }
 
 .performance-card {
   @include card-style;
-
   .performance-header {
     display: flex;
     justify-content: space-between;
@@ -349,13 +369,13 @@
   max-width: $container-max-width;
   margin-left: auto;
   margin-right: auto;
-  
+
   // For medium screens, 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
     max-width: $container-max-width * 0.67;
   }
-  
+
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -421,13 +441,13 @@
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-  
+
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
     max-width: $container-max-width * 0.67;
   }
-  
+
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -488,13 +508,13 @@
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-  
+
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
     max-width: $container-max-width * 0.67;
   }
-  
+
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -586,13 +606,13 @@
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-  
+
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
     max-width: $container-max-width * 0.67;
   }
-  
+
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -717,13 +737,13 @@
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-  
+
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
     max-width: $container-max-width * 0.67;
   }
-  
+
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -797,15 +817,20 @@
   @include card-style;
   min-height: 400px;
   position: relative;
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, $primary-blue, $accent-color, $success-color);
+    background: linear-gradient(
+      90deg,
+      $primary-blue,
+      $accent-color,
+      $success-color
+    );
     border-radius: $border-radius-lg $border-radius-lg 0 0;
   }
 }
@@ -814,7 +839,7 @@
   height: $icon-size-xl * 7;
   position: relative;
   padding: $spacing-xl 0 $spacing-md 0;
-  
+
   .chart-title {
     position: absolute;
     top: 0;
@@ -827,7 +852,7 @@
     margin-bottom: $spacing-md;
     z-index: 10;
   }
-  
+
   .chart-subtitle {
     position: absolute;
     top: $spacing-md;
@@ -868,7 +893,7 @@
       }
     }
   }
-  
+
   .trend-bars {
     display: flex;
     justify-content: space-between;
@@ -880,7 +905,7 @@
     position: relative;
     z-index: 5;
   }
-  
+
   .trend-bar {
     display: flex;
     flex-direction: column;
@@ -889,13 +914,13 @@
     max-width: 70px;
     height: 100%;
     position: relative;
-    
+
     &:hover {
       .trend-bar-fill {
         transform: scale(1.02);
         box-shadow: 0 4px 12px rgba($primary-blue, 0.3);
       }
-      
+
       .trend-value {
         transform: scale(1.1);
         color: $primary-blue;
@@ -931,13 +956,17 @@
       position: relative;
       background: $primary-blue;
       min-height: 4px;
-      
+
       // Highest value gets different color
       &.highest {
-        background: linear-gradient(180deg, $success-color, $success-color-dark);
+        background: linear-gradient(
+          180deg,
+          $success-color,
+          $success-color-dark
+        );
         box-shadow: 0 2px 8px rgba($success-color, 0.3);
       }
-      
+
       &:hover {
         background: linear-gradient(180deg, $primary-blue-dark, $primary-blue);
         transform: scale(1.02);
@@ -963,7 +992,6 @@
     }
   }
 }
-
 
 @media (max-width: $breakpoint-md) {
   .dashboard-header {
@@ -1016,7 +1044,6 @@
   .trend-day {
     font-size: $font-size-xs;
   }
-
   .trend-value {
     font-size: $font-size-xs;
   }
@@ -1026,3 +1053,5 @@
     text-align: center;
   }
 }
+
+// End of file
