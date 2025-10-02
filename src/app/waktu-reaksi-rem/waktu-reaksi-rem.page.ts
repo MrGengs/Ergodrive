@@ -315,4 +315,8 @@ export class WaktuReaksiRemPage implements OnInit, OnDestroy {
     const brakingDistance = (speedMs * speedMs) / (2 * 9.8); // Simplified braking distance
     return Math.round(reactionDistance + brakingDistance);
   }
+
+  formatDecimal(value: number): number {
+    return Math.round(value * 100) / 100;
+  }
 }

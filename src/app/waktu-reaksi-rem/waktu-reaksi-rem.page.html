@@ -39,16 +39,16 @@
               class="metric-value"
               [style.color]="getReactionTimeColor(statistics.averageReactionTime)"
             >
-              {{ statistics.averageReactionTime }}s
+              {{ formatDecimal(statistics.averageReactionTime) }}s
             </div>
             <div class="metric-label">Waktu Reaksi Rata-rata</div>
           </div>
           <div class="performance-metric">
-            <div class="metric-value">{{ statistics.bestReactionTime }}s</div>
+            <div class="metric-value">{{ formatDecimal(statistics.bestReactionTime) }}s</div>
             <div class="metric-label">Waktu Terbaik</div>
           </div>
           <div class="performance-metric">
-            <div class="metric-value">{{ statistics.accuracyRate }}%</div>
+            <div class="metric-value">{{ formatDecimal(statistics.accuracyRate) }}%</div>
             <div class="metric-label">Akurasi</div>
           </div>
         </div>
@@ -71,7 +71,7 @@
           <ion-icon name="trending-up"></ion-icon>
         </div>
         <div class="stat-content">
-          <div class="stat-value">+{{ statistics.improvementRate }}%</div>
+          <div class="stat-value">+{{ formatDecimal(statistics.improvementRate) }}%</div>
           <div class="stat-label">Peningkatan</div>
         </div>
       </div>
@@ -80,7 +80,7 @@
           <ion-icon name="checkmark-circle"></ion-icon>
         </div>
         <div class="stat-content">
-          <div class="stat-value">{{ statistics.accuracyRate }}%</div>
+          <div class="stat-value">{{ formatDecimal(statistics.accuracyRate) }}%</div>
           <div class="stat-label">Akurasi Reaksi</div>
         </div>
       </div>
@@ -116,16 +116,16 @@
                 class="metric-value"
                 [style.color]="getReactionTimeColor(speed.reactionTime)"
               >
-                {{ speed.reactionTime }}s
+                {{ formatDecimal(speed.reactionTime) }}s
               </span>
             </div>
             <div class="speed-metric">
               <span class="metric-label">Jarak Rem:</span>
-              <span class="metric-value">{{ speed.brakingDistance }}m</span>
+              <span class="metric-value">{{ formatDecimal(speed.brakingDistance) }}m</span>
             </div>
             <div class="speed-metric">
               <span class="metric-label">Total:</span>
-              <span class="metric-value">{{ speed.totalDistance }}m</span>
+              <span class="metric-value">{{ formatDecimal(speed.totalDistance) }}m</span>
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@
                       [style.background]="getReactionTimeColor(data.value)"
                     ></div>
                   </div>
-                  <div class="bar-value">{{ data.value }}s</div>
+                  <div class="bar-value">{{ formatDecimal(data.value) }}s</div>
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@
                       [style.background]="getBarColor(data.percentage)"
                     ></div>
                   </div>
-                  <div class="bar-value">{{ data.value }}m</div>
+                  <div class="bar-value">{{ formatDecimal(data.value) }}m</div>
                 </div>
               </div>
             </div>
@@ -212,7 +212,7 @@
                       [style.background]="getBarColor(data.value)"
                     ></div>
                   </div>
-                  <div class="bar-value">{{ data.value }}%</div>
+                  <div class="bar-value">{{ formatDecimal(data.value) }}%</div>
                 </div>
               </div>
             </div>
@@ -239,7 +239,7 @@
                       [style.background]="getBarColor(data.value)"
                     ></div>
                   </div>
-                  <div class="bar-value">{{ data.value }}%</div>
+                  <div class="bar-value">{{ formatDecimal(data.value) }}%</div>
                 </div>
               </div>
             </div>
@@ -283,16 +283,16 @@
             <div class="test-time">{{ test.time }}</div>
             <div class="test-metrics">
               <div class="test-metric">
-                <span>Reaksi: {{ test.reactionTime }}s</span>
+                <span>Reaksi: {{ formatDecimal(test.reactionTime) }}s</span>
               </div>
               <div class="test-metric">
                 <span>Kecepatan: {{ test.speed }} km/j</span>
               </div>
               <div class="test-metric">
-                <span>Jarak: {{ test.distance }}m</span>
+                <span>Jarak: {{ formatDecimal(test.distance) }}m</span>
               </div>
               <div class="test-metric">
-                <span>Akurasi: {{ test.accuracy }}%</span>
+                <span>Akurasi: {{ formatDecimal(test.accuracy) }}%</span>
               </div>
             </div>
           </div>

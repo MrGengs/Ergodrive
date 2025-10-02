@@ -1,5 +1,5 @@
 // Import theme variables
-@import "../../theme/variables";
+@import '../../theme/variables';
 
 // Mixin for card styles
 @mixin card-style {
@@ -20,48 +20,99 @@
   }
 }
 
+// Mixin for section titles
+@mixin section-title-waktu-reaksi-rem {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid $border-color;
+  letter-spacing: $letter-spacing-sm;
+}
+
 // Dashboard Container
 .dashboard-container {
-  min-height: 100vh;
+  height: 100vh;
   background: $background-light;
-  padding: 0;
+  padding: $spacing-md;
+  padding-left: calc($spacing-md + 40px); // Add space for sidebar
+  padding-top: 110px; // Add space for fixed header (90px header height + some margin)
+  overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 100px; // Space for fixed header
+  margin-left: 20px; // Additional spacing from sidebar
   box-sizing: border-box;
+  
+  // Custom scrollbar styling
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: rgba($primary-blue, 0.5) transparent;
+  
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: $border-radius-full;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary-blue, 0.5);
+    border-radius: $border-radius-full;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba($primary-blue, 0.8);
+    }
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 
   @media (max-width: $breakpoint-md) {
-    padding-top: 90px;
+    padding: $spacing-sm;
+    padding-left: calc($spacing-sm + 40px);
+    padding-top: 100px; // Adjust for smaller screens
+    margin-left: 10px;
+    
+    // Smaller scrollbar for mobile
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
   }
 }
 
-// Header Wrapper
-app-shared-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  width: 100%;
-  background: $blue-gradient-2;
-  box-shadow: $shadow-md;
+// Uniform Content Wrapper
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  
+  @media (max-width: 1600px) {
+    max-width: 1200px;
+  }
+  
+  @media (max-width: 1200px) {
+    max-width: 100%;
+    padding: 0 $spacing-md;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    padding: 0 $spacing-sm;
+  }
 }
 
 // Dashboard Content
 .dashboard-content {
-  max-width: $container-max-width;
-  margin: 0 auto;
-  padding: 0 $spacing-lg $spacing-lg;
+  width: 100%;
   box-sizing: border-box;
-
-  // Add spacing between sections
-  & > *:not(:last-child) {
-    margin-bottom: $spacing-xxl;
-  }
-
-  @media (max-width: $breakpoint-md) {
-    padding: $spacing-md;
-    margin-top: $spacing-sm;
-  }
+  overflow-x: visible; // Allow content to extend beyond container if needed
+  min-width: 0; // Allow flex items to shrink
 }
 
 // Header Styles
@@ -75,6 +126,8 @@ app-shared-header {
   border-radius: $border-radius-lg;
   box-shadow: $shadow-md;
   margin-bottom: $spacing-lg;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: $breakpoint-md) {
     flex-direction: column;
@@ -151,12 +204,21 @@ app-shared-header {
   }
 }
 
+// Uniform Section Container
+.section-container {
+  margin-bottom: $spacing-xxl;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Performance Section
 .current-performance {
-  margin: $spacing-xxl 0 $spacing-xxl;
+  @extend .section-container;
 }
 
 .performance-card {
   @include card-style;
+
   .performance-header {
     display: flex;
     justify-content: space-between;
@@ -223,7 +285,7 @@ app-shared-header {
 
 // Speed Analysis Section
 .speed-analysis {
-  margin-bottom: $spacing-xxl;
+  @extend .section-container;
 
   .analysis-card {
     @include card-style;
@@ -281,19 +343,16 @@ app-shared-header {
             letter-spacing: $letter-spacing-xs;
           }
         }
-      }
-    }
-  }
+    } 
+  }  
 }
-
+    
 // Recommendations Section
 .recommendations {
-  margin-bottom: $spacing-xxl;
+  @extend .section-container;
+
   .recommendation-card {
     @include card-style;
-
-    .recommendation-header {
-      margin-bottom: $spacing-lg;
 
       h3 {
         font-size: $font-size-lg;
@@ -361,39 +420,31 @@ app-shared-header {
 }
 
 .stats-overview {
+  @extend .section-container;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: $spacing-lg;
-  margin-bottom: $spacing-xl;
-  margin-top: $spacing-md;
-  max-width: $container-max-width;
-  margin-left: auto;
-  margin-right: auto;
-
+  gap: $spacing-xl;
+  
   // For medium screens, 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
-    max-width: $container-max-width * 0.67;
   }
-
+  
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
   }
 }
-
 .stat-card {
   @include card-style;
   display: flex;
   align-items: center;
-  gap: $spacing-lg;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  gap: $spacing-md;
+  padding: $spacing-lg;
   min-height: $icon-size-xl * 2.17;
-}
-
-.stat-card:hover {
-  transform: translateY(-$spacing-sm);
-  box-shadow: $shadow-lg;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #e5e7eb !important;
 }
 
 .stat-icon {
@@ -413,22 +464,33 @@ app-shared-header {
 
 .stat-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: inherit;
 }
 
-.stat-value {
+.stat-card .stat-content .stat-value {
   font-size: $font-size-xxxl;
   font-weight: 600;
-  color: $text-primary;
+  color: #1f2937 !important;
   margin-bottom: $spacing-xxs;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.stat-label {
-  color: $text-secondary;
+.stat-card .stat-content .stat-label {
+  color: #6b7280 !important;
   font-size: $font-size-sm;
+  font-weight: 500;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .speed-analysis-section {
-  margin-bottom: $spacing-xl;
+  @extend .section-container;
 }
 
 .section-title {
@@ -441,13 +503,13 @@ app-shared-header {
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-
+  
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
     max-width: $container-max-width * 0.67;
   }
-
+  
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -494,12 +556,24 @@ app-shared-header {
 .speed-metric {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.9);
+  color: $text-primary;
   font-size: $font-size-sm;
+  
+  .metric-label {
+    color: $text-secondary !important;
+  }
+  
+  .metric-value {
+    text-align: right !important;
+    min-width: 60px;
+    font-size: $font-size-sm !important;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 0 !important;
+  }
 }
 .charts-section {
-  margin-bottom: $spacing-xl;
+  @extend .section-container;
 }
 
 .charts-grid {
@@ -508,13 +582,12 @@ app-shared-header {
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-
+  
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
-    max-width: $container-max-width * 0.67;
   }
-
+  
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -597,7 +670,7 @@ app-shared-header {
 }
 
 .factors-section {
-  margin-bottom: $spacing-xl;
+  @extend .section-container;
 }
 
 .factors-grid {
@@ -606,13 +679,12 @@ app-shared-header {
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-
+  
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
-    max-width: $container-max-width * 0.67;
   }
-
+  
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -673,7 +745,7 @@ app-shared-header {
 }
 
 .recent-tests-section {
-  margin-bottom: $spacing-xl;
+  @extend .section-container;
 }
 
 .recent-tests-list {
@@ -683,15 +755,15 @@ app-shared-header {
 }
 
 .test-item {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: $blur-md;
+  background: white;
   border-radius: $border-radius-lg;
   padding: $spacing-md;
-  border: $border-width solid rgba(255, 255, 255, 0.2);
+  border: $border-width solid rgba($accent-color, 0.1);
   display: flex;
   align-items: center;
   gap: $spacing-md;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: $shadow-sm;
 }
 
 .test-item:hover {
@@ -728,7 +800,7 @@ app-shared-header {
   font-size: $font-size-sm;
 }
 .recommendations-section {
-  margin-bottom: $spacing-xl;
+  @extend .section-container;
 }
 
 .recommendations-grid {
@@ -737,13 +809,12 @@ app-shared-header {
   gap: $spacing-md;
   max-width: $container-max-width;
   margin: 0 auto;
-
+  
   // For medium screens, tetap 2 kotak per baris
   @media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md) {
     grid-template-columns: repeat(2, 1fr);
-    max-width: $container-max-width * 0.67;
   }
-
+  
   // For mobile, 1 kotak per baris
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -806,31 +877,25 @@ app-shared-header {
   border-radius: $border-radius-md;
   color: white;
   font-size: $font-size-xs;
-  font-weight: 600;
 }
 
 .trends-section {
-  margin-bottom: $spacing-xl;
+  @extend .section-container;
 }
 
 .trends-card {
   @include card-style;
   min-height: 400px;
   position: relative;
-
+  
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(
-      90deg,
-      $primary-blue,
-      $accent-color,
-      $success-color
-    );
+    background: linear-gradient(90deg, $primary-blue, $accent-color, $success-color);
     border-radius: $border-radius-lg $border-radius-lg 0 0;
   }
 }
@@ -839,7 +904,7 @@ app-shared-header {
   height: $icon-size-xl * 7;
   position: relative;
   padding: $spacing-xl 0 $spacing-md 0;
-
+  
   .chart-title {
     position: absolute;
     top: 0;
@@ -852,7 +917,7 @@ app-shared-header {
     margin-bottom: $spacing-md;
     z-index: 10;
   }
-
+  
   .chart-subtitle {
     position: absolute;
     top: $spacing-md;
@@ -893,7 +958,7 @@ app-shared-header {
       }
     }
   }
-
+  
   .trend-bars {
     display: flex;
     justify-content: space-between;
@@ -905,7 +970,7 @@ app-shared-header {
     position: relative;
     z-index: 5;
   }
-
+  
   .trend-bar {
     display: flex;
     flex-direction: column;
@@ -914,13 +979,13 @@ app-shared-header {
     max-width: 70px;
     height: 100%;
     position: relative;
-
+    
     &:hover {
       .trend-bar-fill {
         transform: scale(1.02);
         box-shadow: 0 4px 12px rgba($primary-blue, 0.3);
       }
-
+      
       .trend-value {
         transform: scale(1.1);
         color: $primary-blue;
@@ -956,17 +1021,13 @@ app-shared-header {
       position: relative;
       background: $primary-blue;
       min-height: 4px;
-
+      
       // Highest value gets different color
       &.highest {
-        background: linear-gradient(
-          180deg,
-          $success-color,
-          $success-color-dark
-        );
+        background: linear-gradient(180deg, $success-color, $success-color-dark);
         box-shadow: 0 2px 8px rgba($success-color, 0.3);
       }
-
+      
       &:hover {
         background: linear-gradient(180deg, $primary-blue-dark, $primary-blue);
         transform: scale(1.02);
@@ -1054,4 +1115,3 @@ app-shared-header {
   }
 }
 
-// End of file
