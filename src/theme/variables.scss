@@ -366,10 +366,7 @@ $page-waktu-reaksi-kemudi-accent: #0891b2;  // Cyan for steering reaction time p
   @include section-title;
   border-bottom-color: rgba($page-tes-kantuk-accent, 0.1);
   
-  &::after {
-    background: $page-tes-kantuk-accent;
-    width: 70px;
-  }
+  // Removed ::after pseudo-element as requested
   
   &:hover {
     color: $page-tes-kantuk-accent;

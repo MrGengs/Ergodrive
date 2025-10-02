@@ -1001,44 +1001,42 @@ app-shared-header {
 // Styles for Webcam Drowsiness Detection
 .webcam-section {
   @include card-style;
-  margin: 0 auto 1.5rem;
-  width: 100%;
-  max-width: 100%;
+  margin: 0.5rem auto;
+  width: 90%;
+  max-width: 900px;
   padding: 1.5rem;
   text-align: center;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--ion-color-primary), var(--ion-color-secondary));
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: auto;
+  max-height: 95vh;
+  box-sizing: border-box;
 
   .section-title {
     color: $primary-blue;
-    margin: 0 0 1.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 600;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+    letter-spacing: 0.5px;
   }
 
   .video-container {
     position: relative;
     width: 100%;
-    max-width: 600px; /* Reduced from 800px */
-    margin: 0 auto;
-    border-radius: 8px;
+    max-width: 100%;
+    margin: 0 auto 0 0;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     background: #000;
-    aspect-ratio: 16/9; /* Changed from 4/3 to 16/9 for a wider, shorter appearance */
+    aspect-ratio: 16/9;
+    max-height: 60vh;
 
     video,
     canvas {
@@ -1057,14 +1055,17 @@ app-shared-header {
   }
 
   .detection-status {
-    margin-top: 1.25rem;
-    font-size: 1rem;
+    margin: 1rem 0;
+    font-size: 1.1rem;
     font-weight: 500;
-    background: rgba(var(--ion-color-light-rgb), 0.6);
+    background: rgba(var(--ion-color-light-rgb), 0.85);
     border-radius: 8px;
-    padding: 0.75rem 1rem;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(var(--ion-color-medium-rgb), 0.15);
+    padding: 0.8rem 1.2rem;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     p {
       margin: 0;
@@ -1134,28 +1135,61 @@ app-shared-header {
     }
   }
 
-  @media (max-width: 768px) {
-    .video-container {
-      max-width: 100%;
-      aspect-ratio: 16/9;
+  @media (max-width: 1200px) {
+    max-width: 90%;
+    width: 90%;
+    padding: 1rem;
+    margin: 0.25rem auto;
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
     }
-  }
-
-  @media (max-width: 576px) {
-    padding: 1.25rem;
     
     .video-container {
       max-width: 100%;
       aspect-ratio: 16/9;
+    }
+    
+    .detection-status {
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem;
+      max-width: 90%;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 0.75rem;
+    margin: 0 auto;
+    width: 98%;
+    max-width: 98%;
+    max-height: 98vh;
+    
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .video-container {
+      max-width: 100%;
+      aspect-ratio: 16/9;
+    }
+    
+    .detection-status {
+      font-size: 1rem;
+      padding: 0.9rem 1.2rem;
+      margin-top: 1.5rem;
     }
   }
 
   @media (max-width: 480px) {
     padding: 1rem;
+    min-height: 280px;
     
     .section-title {
       font-size: 1.1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
     
     .video-container {

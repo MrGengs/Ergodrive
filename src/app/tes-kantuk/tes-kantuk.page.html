@@ -3,8 +3,8 @@
   <app-shared-header
     [pageTitle]="'Tes Kantuk'"
     [pageSubtitle]="'Analisis tingkat kantuk dan dampaknya pada performa mengemudi'"
-    [showSleepTestButton]="!isTestRunning"
-    [showStopTestButton]="isTestRunning"
+    [showSleepTestButton]="!tesBerjalan"
+    [showStopTestButton]="tesBerjalan"
     (sleepTestClick)="startSleepTest()"
     (stopTestClick)="stopSleepTest()"
   >
@@ -12,7 +12,7 @@
       <ion-button (click)="refreshData()" fill="clear" size="small">
         <ion-icon name="refresh-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="exportData()" fill="clear" size="small">
+      <ion-button (click)="eksporData()" fill="clear" size="small">
         <ion-icon name="download-outline"></ion-icon>
       </ion-button>
     </div>
@@ -25,7 +25,7 @@
       <canvas #canvasElement></canvas>
     </div>
     <div class="detection-status">
-      <p>Status: <span [ngClass]="statusColor">{{ drowsinessStatus }}</span></p>
+      <p>Status: <span [ngClass]="warnaStatus">{{ statusKantuk }}</span></p>
     </div>
   </div>
 
@@ -37,24 +37,24 @@
           <h2>Status Saat Ini</h2>
           <div
             class="status-indicator"
-            [style.background]="getSleepinessColor(statistics.averageSleepiness)"
+            [style.background]="dapatkanWarnaKantuk(statistik.tingkatKantuk)"
           >
-            {{ getCurrentSleepinessLevel() }}
+            {{ dapatkanLevelKantuk() }}
           </div>
         </div>
         <div class="status-content">
           <div class="status-metric">
-            <div class="metric-value">{{ statistics.averageSleepiness }}%</div>
+            <div class="metric-value">{{ statistik.tingkatKantuk }}%</div>
             <div class="metric-label">Tingkat Kantuk</div>
           </div>
           <div class="status-metric">
             <div class="metric-value">
-              {{ statistics.averageReactionTime }}s
+              {{ statistik.waktuReaksi }}s
             </div>
             <div class="metric-label">Waktu Reaksi</div>
           </div>
           <div class="status-metric">
-            <div class="metric-value">{{ statistics.cognitiveScore }}%</div>
+            <div class="metric-value">{{ statistik.skorKognitif }}%</div>
             <div class="metric-label">Skor Kognitif</div>
           </div>
         </div>
@@ -68,7 +68,7 @@
           <ion-icon name="bed-outline"></ion-icon>
         </div>
         <div class="stat-content">
-          <div class="stat-value">{{ statistics.totalTests }}</div>
+          <div class="stat-value">{{ statistik.totalTests }}</div>
           <div class="stat-label">Total Tes</div>
         </div>
       </div>
@@ -77,7 +77,7 @@
           <ion-icon name="moon-outline"></ion-icon>
         </div>
         <div class="stat-content">
-          <div class="stat-value">{{ statistics.sleepQuality }}%</div>
+          <div class="stat-value">{{ statistik.sleepQuality }}%</div>
           <div class="stat-label">Kualitas Tidur</div>
         </div>
       </div>
@@ -86,7 +86,7 @@
           <ion-icon name="trending-up-outline"></ion-icon>
         </div>
         <div class="stat-content">
-          <div class="stat-value">+{{ statistics.improvementRate }}%</div>
+          <div class="stat-value">+{{ statistik.improvementRate }}%</div>
           <div class="stat-label">Peningkatan</div>
         </div>
       </div>
@@ -95,7 +95,7 @@
           <ion-icon name="time-outline"></ion-icon>
         </div>
         <div class="stat-content">
-          <div class="stat-value">{{ statistics.testDuration }}</div>
+          <div class="stat-value">{{ statistik.testDuration }}</div>
           <div class="stat-label">Durasi Tes</div>
         </div>
       </div>
@@ -109,13 +109,18 @@
           <div class="warning-header">
             <div class="warning-icon">
               <ion-icon
-                [name]="level.icon"
+                [name]="level.level === 'Rendah' ? 'checkmark-circle' : level.level === 'Sedang' ? 'alert-circle' : 'warning'"
                 [style.color]="level.color"
               ></ion-icon>
             </div>
             <div class="warning-title">
               <h3 [style.color]="level.color">{{ level.level }}</h3>
-              <div class="warning-range">{{ level.range }}</div>
+              <div class="warning-range">
+                {{ 
+                  level.level === 'Rendah' ? '0-30%' : 
+                  level.level === 'Sedang' ? '31-70%' : '71-100%' 
+                }}
+              </div>
             </div>
           </div>
           <div class="warning-description">{{ level.description }}</div>
@@ -139,12 +144,12 @@
                   class="bar-item"
                   *ngFor="let data of chartData.tingkatKantuk.data"
                 >
-                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-label">{{ data.name }}</div>
                   <div class="bar-wrapper">
                     <div
                       class="bar-fill"
-                      [style.width.%]="data.percentage"
-                      [style.background]="getSleepinessColor(data.value)"
+                      [style.width.%]="data.value"
+                      [style.background]="dapatkanWarnaKantuk(data.value)"
                     ></div>
                   </div>
                   <div class="bar-value">{{ data.value }}%</div>
@@ -166,11 +171,11 @@
                   class="bar-item"
                   *ngFor="let data of chartData.reaksiMata.data"
                 >
-                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-label">{{ data.name }}</div>
                   <div class="bar-wrapper">
                     <div
                       class="bar-fill"
-                      [style.width.%]="data.percentage"
+                      [style.width.%]="data.value"
                       [style.background]="getBarColor(data.value)"
                     ></div>
                   </div>
@@ -193,11 +198,11 @@
                   class="bar-item"
                   *ngFor="let data of chartData.kinerjaKognitif.data"
                 >
-                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-label">{{ data.name }}</div>
                   <div class="bar-wrapper">
                     <div
                       class="bar-fill"
-                      [style.width.%]="data.percentage"
+                      [style.width.%]="data.value"
                       [style.background]="getBarColor(data.value)"
                     ></div>
                   </div>
@@ -220,11 +225,11 @@
                   class="bar-item"
                   *ngFor="let data of chartData.kualitasTidur.data"
                 >
-                  <div class="bar-label">{{ data.label }}</div>
+                  <div class="bar-label">{{ data.name }}</div>
                   <div class="bar-wrapper">
                     <div
                       class="bar-fill"
-                      [style.width.%]="data.percentage"
+                      [style.width.%]="data.value"
                       [style.background]="getBarColor(data.value)"
                     ></div>
                   </div>
@@ -248,33 +253,28 @@
               <span class="metric-label">Kantuk:</span>
               <span
                 class="metric-value"
-                [style.color]="getSleepinessColor(pattern.sleepiness)"
+                [style.color]="dapatkanWarnaKantuk(pattern.sleepiness)"
               >
                 {{ pattern.sleepiness }}%
               </span>
             </div>
             <div class="pattern-metric">
               <span class="metric-label">Reaksi:</span>
-              <span class="metric-value">{{ pattern.reaction }}s</span>
+              <span class="metric-value">{{ pattern.reaction || '0' }}s</span>
             </div>
             <div class="pattern-metric">
               <span class="metric-label">Kognitif:</span>
-              <span class="metric-value">{{ pattern.cognitive }}%</span>
+              <span class="metric-value">{{ pattern.cognitive || '0' }}%</span>
             </div>
-          </div>
           <div
             class="pattern-quality"
-            [style.color]="getSleepinessColor(pattern.sleepiness)"
+            [style.color]="dapatkanWarnaKantuk(pattern.sleepiness)"
           >
-            {{ pattern.quality === 'excellent' ? 'Sempurna' : pattern.quality
-            === 'good' ? 'Baik' : pattern.quality === 'average' ? 'Cukup' :
-            'Buruk' }}
+            {{ getSleepQualityLabel(pattern.quality) }}
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Recent Tests -->
     <div class="recent-tests-section">
       <h2 class="section-title">Tes Terbaru</h2>
       <div class="recent-tests-list">
@@ -284,19 +284,18 @@
             [style.background]="getStatusColor(test.status)"
           ></div>
           <div class="test-details">
-            <div class="test-time">{{ test.time }}</div>
+            <div class="test-time">{{ test.date | date:'shortTime' }}</div>
             <div class="test-metrics">
               <div class="test-metric">
-                <span>Kantuk: {{ test.sleepiness }}%</span>
+                <span>Skor: {{ test.score }}%</span>
               </div>
               <div class="test-metric">
-                <span>Reaksi: {{ test.reaction }}s</span>
-              </div>
-              <div class="test-metric">
-                <span>Kognitif: {{ test.cognitive }}%</span>
+                <span>Status: {{ test.status }}</span>
               </div>
             </div>
-            <div class="test-recommendation">{{ test.recommendation }}</div>
+            <div class="test-recommendation">
+              {{ getRecommendation(test) }}
+            </div>
           </div>
         </div>
       </div>
@@ -335,8 +334,8 @@
       <h2 class="section-title">Tren Performa Mingguan</h2>
       <div class="trends-card">
         <div class="trends-chart">
-          <div class="chart-title">Tingkat Kewaspadaan</div>
-          <div class="chart-subtitle">Skor rata-rata harian</div>
+          <div class="chart-title" style="margin-bottom: 12px;">Tingkat Kewaspadaan</div>
+          <div class="chart-subtitle" style="margin-top: 8px; font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #666666; font-weight: 400;">Skor rata-rata harian</div>
           <div class="grid-lines">
             <div class="grid-line" style="bottom: 0%" data-value="60%"></div>
             <div class="grid-line" style="bottom: 25%" data-value="67.5%"></div>
@@ -357,7 +356,7 @@
                   [class.highest]="trend.value === getHighestValue()"
                 ></div>
               </div>
-              <div class="trend-value">{{ trend.score }}</div>
+              <div class="trend-value">{{ trend.value }}</div>
             </div>
           </div>
         </div>
