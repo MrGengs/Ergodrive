@@ -32,24 +32,40 @@ export interface DetectionResult {
 export class FaceDetectionService {
   private modelsLoaded = false;
   private readonly EAR_THRESHOLD = 0.25; // Eye Aspect Ratio threshold for eye closure
-  private readonly YAWN_THRESHOLD = 0.4; // Mouth aspect ratio threshold for yawn
 
   async loadModels(): Promise<boolean> {
     try {
       // Load models from public folder
       const MODEL_URL = '/assets/weights';
 
-      await Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-      ]);
+      console.log('Loading face detection models from:', MODEL_URL);
 
-      this.modelsLoaded = true;
-      console.log('Face detection models loaded successfully');
-      return true;
+      // Load models one by one with error handling for each
+      try {
+        console.log('Loading tinyFaceDetector model...');
+        await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+        console.log('tinyFaceDetector model loaded');
+
+        console.log('Loading faceLandmark68Net model...');
+        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+        console.log('faceLandmark68Net model loaded');
+
+        console.log('Loading faceExpressionNet model...');
+        await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+        console.log('faceExpressionNet model loaded');
+
+        this.modelsLoaded = true;
+        console.log('All face detection models loaded successfully');
+        return true;
+      } catch (modelError) {
+        console.error('Error loading specific model:', modelError);
+        throw modelError; // Re-throw to be caught by the outer catch
+      }
     } catch (error) {
       console.error('Error loading face detection models:', error);
+      console.error(
+        'Please ensure the model files are in the correct location at public/assets/weights/'
+      );
       return false;
     }
   }

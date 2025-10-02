@@ -997,3 +997,198 @@ app-shared-header {
     transform: translateX(100%);
   }
 }
+
+// Styles for Webcam Drowsiness Detection
+// Webcam Section
+.webcam-section {
+  @include card-style;
+  margin: 0 auto 2rem;
+  max-width: 800px;
+  padding: 1.5rem;
+  text-align: center;
+
+  .section-title {
+    color: $primary-blue;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #000;
+    aspect-ratio: 4/3;
+
+    video, canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1); // Mirror the video for a more natural feel
+    }
+
+    canvas {
+      pointer-events: none; // Make sure clicks go through to the video
+    }
+  }
+
+  .detection-status {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+
+    span {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      text-transform: capitalize;
+
+      &.success {
+        background-color: rgba($success-color, 0.1);
+        color: darken($success-color, 10%);
+      }
+
+      &.warning {
+        background-color: rgba($warning-color, 0.1);
+        color: darken($warning-color, 15%);
+      }
+
+      &.danger {
+        background-color: rgba($danger-color, 0.1);
+        color: darken($danger-color, 10%);
+      }
+
+      &.primary {
+        background-color: rgba($primary-blue, 0.1);
+        color: darken($primary-blue, 10%);
+      }
+
+      &.dark {
+        background-color: rgba($text-secondary, 0.1);
+        color: $text-secondary;
+      }
+    }
+  }
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--ion-color-primary), var(--ion-color-secondary));
+  }
+
+  .section-title {
+    color: var(--ion-color-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1.25rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    ion-icon {
+      color: var(--ion-color-primary);
+      font-size: 1.4rem;
+    }
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    aspect-ratio: 4/3;
+    max-width: 100%;
+    height: auto;
+
+    video, canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px solid rgba(var(--ion-color-primary-rgb), 0.1);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+  }
+
+  .detection-status {
+    background: rgba(var(--ion-color-light-rgb), 0.6);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(var(--ion-color-medium-rgb), 0.15);
+
+    p {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 0 0.5rem 0;
+      font-size: 0.95rem;
+      color: var(--ion-color-medium);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      span {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        &::before {
+          content: '•';
+          color: var(--ion-color-primary);
+          font-size: 1.5rem;
+          line-height: 0;
+        }
+
+        &.success { color: var(--ion-color-success); }
+        &.warning { color: var(--ion-color-warning); }
+        &.danger { color: var(--ion-color-danger); }
+        &.dark { color: var(--ion-color-dark); }
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    max-width: 100%;
+    margin: 0 auto 2rem;
+  }
+}

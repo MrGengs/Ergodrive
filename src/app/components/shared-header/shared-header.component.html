@@ -16,6 +16,16 @@
   </div>
   <div class="header-right">
     <div class="header-actions">
+      <div class="action-buttons">
+        <ion-button *ngIf="showSleepTestButton" (click)="onSleepTestClick()" fill="solid" size="small">
+          <ion-icon name="bed-outline"></ion-icon>
+          Mulai Tes
+        </ion-button>
+        <ion-button *ngIf="showStopTestButton" (click)="onStopTestClick()" fill="solid" color="danger" size="small">
+          <ion-icon name="stop-circle-outline"></ion-icon>
+          Hentikan Tes
+        </ion-button>
+      </div>
       <ng-content select="[slot='actions']"></ng-content>
     </div>
   </div>

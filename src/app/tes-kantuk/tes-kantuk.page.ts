@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import * as faceapi from 'face-api.js';
 
 @Component({
   selector: 'app-tes-kantuk',
@@ -7,8 +8,23 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   standalone: false,
 })
 export class TesKantukPage implements OnInit, OnDestroy {
-  
-  // Chart data for tes kantuk
+  @ViewChild('videoElement') videoElement?: ElementRef<HTMLVideoElement>;
+  @ViewChild('canvasElement') canvasElement?: ElementRef<HTMLCanvasElement>;
+
+  drowsinessStatus: string = 'Belum Terdeteksi';
+  eyeAspectRatio: number = 0;
+  statusColor: string = 'dark';
+  isTestRunning: boolean = false;
+
+  private stream?: MediaStream;
+  private detectionInterval: any;
+
+  // Drowsiness detection parameters
+  private readonly EAR_THRESHOLD = 0.2;
+  private readonly CONSECUTIVE_FRAMES = 20;
+  private frameCounter = 0;
+
+  // Chart data, statistics, etc. (keeping the original data)
   chartData = {
     tingkatKantuk: {
       title: 'Tingkat Kantuk',
@@ -47,8 +63,6 @@ export class TesKantukPage implements OnInit, OnDestroy {
       ]
     }
   };
-
-  // Statistics data
   statistics = {
     totalTests: 89,
     averageSleepiness: 42.5,
@@ -59,8 +73,6 @@ export class TesKantukPage implements OnInit, OnDestroy {
     lastTestDate: '2024-01-15',
     testDuration: '10 menit'
   };
-
-  // Sleep patterns data
   sleepPatterns = [
     {
       time: '06:00',
@@ -91,8 +103,6 @@ export class TesKantukPage implements OnInit, OnDestroy {
       quality: 'poor'
     }
   ];
-
-  // Warning levels
   warningLevels = [
     {
       level: 'Aman',
@@ -123,8 +133,6 @@ export class TesKantukPage implements OnInit, OnDestroy {
       icon: 'close-circle-outline'
     }
   ];
-
-  // Recent sleep tests
   recentTests = [
     {
       id: 1,
@@ -163,8 +171,6 @@ export class TesKantukPage implements OnInit, OnDestroy {
       status: 'danger'
     }
   ];
-
-  // Sleep recommendations
   recommendations = [
     {
       title: 'Durasi Tidur Ideal',
@@ -191,14 +197,6 @@ export class TesKantukPage implements OnInit, OnDestroy {
       priority: 'high'
     }
   ];
-
-  // Performance trends
-  performanceTrends = {
-    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-    data: [72, 68, 75, 82, 79, 85, 78]
-  };
-
-  // Weekly performance data for new chart format
   weeklyPerformanceData = [
     { day: 'Sen', value: 72, score: '72%' },
     { day: 'Sel', value: 68, score: '68%' },
@@ -209,34 +207,167 @@ export class TesKantukPage implements OnInit, OnDestroy {
     { day: 'Min', value: 78, score: '78%' }
   ];
 
-  // Get highest value for highlighting
-  getHighestValue(): number {
-    return Math.max(...this.weeklyPerformanceData.map(item => item.value));
-  }
-
   private updateInterval: any;
 
   constructor() {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.startRealTimeUpdates();
+    await this.loadModels();
   }
 
   ngOnDestroy() {
+    this.stopSleepTest();
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
   }
 
+  // --- Test Control Methods ---
+  async startSleepTest() {
+    console.log('Starting sleep test...');
+    this.isTestRunning = true;
+    this.drowsinessStatus = 'Memulai kamera...';
+    this.statusColor = 'warning';
+    await this.startWebcam();
+  }
+
+  stopSleepTest() {
+    console.log('Stopping sleep test...');
+    this.isTestRunning = false;
+    this.stopWebcam();
+    this.drowsinessStatus = 'Tes Dihentikan';
+    this.eyeAspectRatio = 0;
+    this.statusColor = 'dark';
+  }
+
+  // --- Webcam and Face Detection Logic ---
+  private async loadModels() {
+    try {
+      await faceapi.nets.tinyFaceDetector.loadFromUri('/assets/weights');
+      await faceapi.nets.faceLandmark68Net.loadFromUri('/assets/weights');
+      console.log('Face-API models loaded successfully.');
+    } catch (error) {
+      console.error('Error loading Face-API models:', error);
+      this.drowsinessStatus = 'Gagal memuat model';
+      this.statusColor = 'danger';
+    }
+  }
+
+  private async startWebcam() {
+    if (!this.videoElement) return;
+
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: false
+      });
+      this.videoElement.nativeElement.srcObject = this.stream;
+      this.videoElement.nativeElement.addEventListener('play', () => {
+        this.setupCanvas();
+        this.startFaceDetection();
+      });
+    } catch (error) {
+      console.error('Error accessing webcam:', error);
+      this.drowsinessStatus = 'Kamera tidak dapat diakses';
+      this.statusColor = 'danger';
+    }
+  }
+
+  private stopWebcam() {
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+    }
+    if (this.detectionInterval) {
+      clearInterval(this.detectionInterval);
+    }
+  }
+
+  private setupCanvas() {
+    if (!this.videoElement || !this.canvasElement) return;
+    const video = this.videoElement.nativeElement;
+    const canvas = this.canvasElement.nativeElement;
+    const displaySize = { width: video.clientWidth, height: video.clientHeight };
+    faceapi.matchDimensions(canvas, displaySize);
+  }
+
+  private startFaceDetection() {
+    this.detectionInterval = setInterval(async () => {
+      if (!this.videoElement || !this.canvasElement) return;
+
+      const video = this.videoElement.nativeElement;
+      const canvas = this.canvasElement.nativeElement;
+      const displaySize = { width: video.clientWidth, height: video.clientHeight };
+
+      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks();
+      
+      const resizedDetections = faceapi.resizeResults(detections, displaySize);
+      
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+      }
+
+      if (resizedDetections.length > 0) {
+        this.processDrowsiness(resizedDetections[0].landmarks);
+      } else {
+        this.drowsinessStatus = 'Wajah tidak terdeteksi';
+        this.statusColor = 'warning';
+        this.frameCounter = 0;
+      }
+    }, 100);
+  }
+
+  private processDrowsiness(landmarks: faceapi.FaceLandmarks68) {
+    const leftEye = landmarks.getLeftEye();
+    const rightEye = landmarks.getRightEye();
+
+    const leftEAR = this.calculateEAR(leftEye);
+    const rightEAR = this.calculateEAR(rightEye);
+
+    this.eyeAspectRatio = (leftEAR + rightEAR) / 2.0;
+
+    if (this.eyeAspectRatio < this.EAR_THRESHOLD) {
+      this.frameCounter++;
+      if (this.frameCounter >= this.CONSECUTIVE_FRAMES) {
+        this.drowsinessStatus = 'Mengantuk Terdeteksi!';
+        this.statusColor = 'danger';
+      }
+    } else {
+      this.frameCounter = 0;
+      this.drowsinessStatus = 'Aman';
+      this.statusColor = 'success';
+    }
+  }
+
+  private calculateEAR(eye: faceapi.Point[]): number {
+    const p2_p6 = this.distance(eye[1], eye[5]);
+    const p3_p5 = this.distance(eye[2], eye[4]);
+    const p1_p4 = this.distance(eye[0], eye[3]);
+    const ear = (p2_p6 + p3_p5) / (2.0 * p1_p4);
+    return ear;
+  }
+
+  private distance(p1: faceapi.Point, p2: faceapi.Point): number {
+    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+  }
+
+  // --- Original Methods ---
   private startRealTimeUpdates() {
     this.updateInterval = setInterval(() => {
       this.updateChartData();
     }, 5000);
   }
 
+  getHighestValue(): number {
+    return Math.max(...this.weeklyPerformanceData.map(item => item.value));
+  }
+
   updateChartData() {
     Object.keys(this.chartData).forEach(key => {
-      this.chartData[key as keyof typeof this.chartData].data.forEach(item => {
+      (this.chartData as any)[key].data.forEach((item: any) => {
         const variation = Math.random() * 10 - 5;
         item.value = Math.max(0, Math.min(100, item.value + variation));
         item.percentage = item.value;
@@ -289,9 +420,5 @@ export class TesKantukPage implements OnInit, OnDestroy {
 
   exportData() {
     console.log('Exporting tes kantuk data...');
-  }
-
-  startSleepTest() {
-    console.log('Starting sleep test...');
   }
 }

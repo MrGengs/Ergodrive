@@ -1,0 +1,171 @@
+{
+  "weightsManifest": [
+    {
+      "paths": [
+        "face_landmark_68_model-shard1"
+      ],
+      "weights": [
+        {
+          "name": "conv1_1/kernel",
+          "shape": [3, 3, 3, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv1_1/bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv1_2/kernel",
+          "shape": [3, 3, 64, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv1_2/bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv2_1/kernel",
+          "shape": [3, 3, 64, 128],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv2_1/bias",
+          "shape": [128],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv2_2/kernel",
+          "shape": [3, 3, 128, 128],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv2_2/bias",
+          "shape": [128],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv3_1/kernel",
+          "shape": [3, 3, 128, 256],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv3_1/bias",
+          "shape": [256],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv3_2/kernel",
+          "shape": [3, 3, 256, 256],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv3_2/bias",
+          "shape": [256],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv3_3/kernel",
+          "shape": [3, 3, 256, 256],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv3_3/bias",
+          "shape": [256],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv4_1/kernel",
+          "shape": [3, 3, 256, 512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv4_1/bias",
+          "shape": [512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv4_2/kernel",
+          "shape": [3, 3, 512, 512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv4_2/bias",
+          "shape": [512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv4_3/kernel",
+          "shape": [3, 3, 512, 512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv4_3/bias",
+          "shape": [512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv5_1/kernel",
+          "shape": [3, 3, 512, 512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv5_1/bias",
+          "shape": [512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv5_2/kernel",
+          "shape": [3, 3, 512, 512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv5_2/bias",
+          "shape": [512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv5_3/kernel",
+          "shape": [3, 3, 512, 512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv5_3/bias",
+          "shape": [512],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv6_1/kernel",
+          "shape": [7, 7, 512, 4096],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv6_1/bias",
+          "shape": [4096],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv6_2/kernel",
+          "shape": [1, 1, 4096, 4096],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv6_2/bias",
+          "shape": [4096],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv6_3/kernel",
+          "shape": [1, 1, 4096, 136],
+          "dtype": "float32"
+        },
+        {
+          "name": "conv6_3/bias",
+          "shape": [136],
+          "dtype": "float32"
+        }
+      ]
+    }
+  ]
+}
