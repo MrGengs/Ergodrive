@@ -1,12 +1,13 @@
 <div class="dashboard-container">
   <!-- Header -->
-  <app-shared-header 
+  <app-shared-header
     [pageTitle]="'Tes Kantuk'"
     [pageSubtitle]="'Analisis tingkat kantuk dan dampaknya pada performa mengemudi'"
     [showSleepTestButton]="!isTestRunning"
     [showStopTestButton]="isTestRunning"
     (sleepTestClick)="startSleepTest()"
-    (stopTestClick)="stopSleepTest()">
+    (stopTestClick)="stopSleepTest()"
+  >
     <div class="action-buttons" slot="actions">
       <ion-button (click)="refreshData()" fill="clear" size="small">
         <ion-icon name="refresh-outline"></ion-icon>

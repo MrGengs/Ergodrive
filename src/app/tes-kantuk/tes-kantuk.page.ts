@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import * as faceapi from 'face-api.js';
 
 @Component({
@@ -32,8 +38,8 @@ export class TesKantukPage implements OnInit, OnDestroy {
         { label: 'Pagi (06:00)', value: 15, percentage: 15 },
         { label: 'Siang (12:00)', value: 45, percentage: 45 },
         { label: 'Sore (18:00)', value: 35, percentage: 35 },
-        { label: 'Malam (24:00)', value: 75, percentage: 75 }
-      ]
+        { label: 'Malam (24:00)', value: 75, percentage: 75 },
+      ],
     },
     reaksiMata: {
       title: 'Reaksi Mata',
@@ -41,8 +47,8 @@ export class TesKantukPage implements OnInit, OnDestroy {
         { label: 'Kecepatan Berkedip', value: 82, percentage: 82 },
         { label: 'Durasi Berkedip', value: 68, percentage: 68 },
         { label: 'Frekuensi Menguap', value: 55, percentage: 55 },
-        { label: 'Fokus Pandangan', value: 74, percentage: 74 }
-      ]
+        { label: 'Fokus Pandangan', value: 74, percentage: 74 },
+      ],
     },
     kinerjaKognitif: {
       title: 'Kinerja Kognitif',
@@ -50,8 +56,8 @@ export class TesKantukPage implements OnInit, OnDestroy {
         { label: 'Perhatian', value: 78, percentage: 78 },
         { label: 'Memori', value: 85, percentage: 85 },
         { label: 'Kecepatan Proses', value: 72, percentage: 72 },
-        { label: 'Pengambilan Keputusan', value: 69, percentage: 69 }
-      ]
+        { label: 'Pengambilan Keputusan', value: 69, percentage: 69 },
+      ],
     },
     kualitasTidur: {
       title: 'Kualitas Tidur',
@@ -59,9 +65,9 @@ export class TesKantukPage implements OnInit, OnDestroy {
         { label: 'Durasi Tidur', value: 88, percentage: 88 },
         { label: 'Kedalaman Tidur', value: 72, percentage: 72 },
         { label: 'Efisiensi Tidur', value: 85, percentage: 85 },
-        { label: 'Waktu Tidur', value: 79, percentage: 79 }
-      ]
-    }
+        { label: 'Waktu Tidur', value: 79, percentage: 79 },
+      ],
+    },
   };
   statistics = {
     totalTests: 89,
@@ -71,7 +77,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
     sleepQuality: 81.3,
     improvementRate: 15.2,
     lastTestDate: '2024-01-15',
-    testDuration: '10 menit'
+    testDuration: '10 menit',
   };
   sleepPatterns = [
     {
@@ -79,29 +85,29 @@ export class TesKantukPage implements OnInit, OnDestroy {
       sleepiness: 15,
       reaction: 0.8,
       cognitive: 95,
-      quality: 'excellent'
+      quality: 'excellent',
     },
     {
       time: '12:00',
       sleepiness: 45,
       reaction: 1.5,
       cognitive: 78,
-      quality: 'good'
+      quality: 'good',
     },
     {
       time: '18:00',
       sleepiness: 35,
       reaction: 1.2,
       cognitive: 85,
-      quality: 'good'
+      quality: 'good',
     },
     {
       time: '24:00',
       sleepiness: 75,
       reaction: 2.8,
       cognitive: 45,
-      quality: 'poor'
-    }
+      quality: 'poor',
+    },
   ];
   warningLevels = [
     {
@@ -109,29 +115,29 @@ export class TesKantukPage implements OnInit, OnDestroy {
       range: '0-25%',
       color: '#28a745',
       description: 'Kondisi waspada, aman untuk mengemudi',
-      icon: 'checkmark-circle-outline'
+      icon: 'checkmark-circle-outline',
     },
     {
       level: 'Hati-hati',
       range: '26-50%',
       color: '#ffc107',
       description: 'Mulai mengantuk, pertimbangkan istirahat',
-      icon: 'alert-outline'
+      icon: 'alert-outline',
     },
     {
       level: 'Berbahaya',
       range: '51-75%',
       color: '#fd7e14',
       description: 'Sangat mengantuk, segera berhenti mengemudi',
-      icon: 'warning-outline'
+      icon: 'warning-outline',
     },
     {
       level: 'Kritis',
       range: '76-100%',
       color: '#dc3545',
       description: 'Bahaya tidur di belakang kemudi',
-      icon: 'close-circle-outline'
-    }
+      icon: 'close-circle-outline',
+    },
   ];
   recentTests = [
     {
@@ -141,7 +147,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
       reaction: 1.4,
       cognitive: 82,
       recommendation: 'Aman untuk mengemudi',
-      status: 'safe'
+      status: 'safe',
     },
     {
       id: 2,
@@ -150,7 +156,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
       reaction: 2.1,
       cognitive: 58,
       recommendation: 'Istirahat sejenak disarankan',
-      status: 'warning'
+      status: 'warning',
     },
     {
       id: 3,
@@ -159,7 +165,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
       reaction: 1.1,
       cognitive: 89,
       recommendation: 'Kondisi baik untuk mengemudi',
-      status: 'safe'
+      status: 'safe',
     },
     {
       id: 4,
@@ -168,34 +174,34 @@ export class TesKantukPage implements OnInit, OnDestroy {
       reaction: 3.2,
       cognitive: 42,
       recommendation: 'Tidak disarankan mengemudi',
-      status: 'danger'
-    }
+      status: 'danger',
+    },
   ];
   recommendations = [
     {
       title: 'Durasi Tidur Ideal',
       description: '7-9 jam tidur per malam untuk performa mengemudi optimal',
       icon: 'bed-outline',
-      priority: 'high'
+      priority: 'high',
     },
     {
       title: 'Jadwal Tidur Teratur',
       description: 'Tidur dan bangun pada waktu yang sama setiap hari',
       icon: 'calendar-outline',
-      priority: 'medium'
+      priority: 'medium',
     },
     {
       title: 'Hindari Kafein',
       description: 'Batasi konsumsi kafein 6 jam sebelum tidur',
       icon: 'cafe-outline',
-      priority: 'medium'
+      priority: 'medium',
     },
     {
       title: 'Istirahat Cepat',
       description: 'Power nap 15-20 menit dapat meningkatkan kewaspadaan',
       icon: 'time-outline',
-      priority: 'high'
-    }
+      priority: 'high',
+    },
   ];
   weeklyPerformanceData = [
     { day: 'Sen', value: 72, score: '72%' },
@@ -204,7 +210,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
     { day: 'Kam', value: 82, score: '82%' },
     { day: 'Jum', value: 79, score: '79%' },
     { day: 'Sab', value: 85, score: '85%' },
-    { day: 'Min', value: 78, score: '78%' }
+    { day: 'Min', value: 78, score: '78%' },
   ];
 
   private updateInterval: any;
@@ -260,7 +266,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user' },
-        audio: false
+        audio: false,
       });
       this.videoElement.nativeElement.srcObject = this.stream;
       this.videoElement.nativeElement.addEventListener('play', () => {
@@ -276,7 +282,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
 
   private stopWebcam() {
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
     }
     if (this.detectionInterval) {
       clearInterval(this.detectionInterval);
@@ -287,7 +293,10 @@ export class TesKantukPage implements OnInit, OnDestroy {
     if (!this.videoElement || !this.canvasElement) return;
     const video = this.videoElement.nativeElement;
     const canvas = this.canvasElement.nativeElement;
-    const displaySize = { width: video.clientWidth, height: video.clientHeight };
+    const displaySize = {
+      width: video.clientWidth,
+      height: video.clientHeight,
+    };
     faceapi.matchDimensions(canvas, displaySize);
   }
 
@@ -297,13 +306,17 @@ export class TesKantukPage implements OnInit, OnDestroy {
 
       const video = this.videoElement.nativeElement;
       const canvas = this.canvasElement.nativeElement;
-      const displaySize = { width: video.clientWidth, height: video.clientHeight };
+      const displaySize = {
+        width: video.clientWidth,
+        height: video.clientHeight,
+      };
 
-      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      const detections = await faceapi
+        .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks();
-      
+
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
-      
+
       const context = canvas.getContext('2d');
       if (context) {
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -362,11 +375,11 @@ export class TesKantukPage implements OnInit, OnDestroy {
   }
 
   getHighestValue(): number {
-    return Math.max(...this.weeklyPerformanceData.map(item => item.value));
+    return Math.max(...this.weeklyPerformanceData.map((item) => item.value));
   }
 
   updateChartData() {
-    Object.keys(this.chartData).forEach(key => {
+    Object.keys(this.chartData).forEach((key) => {
       (this.chartData as any)[key].data.forEach((item: any) => {
         const variation = Math.random() * 10 - 5;
         item.value = Math.max(0, Math.min(100, item.value + variation));
@@ -389,20 +402,28 @@ export class TesKantukPage implements OnInit, OnDestroy {
   }
 
   getStatusColor(status: string): string {
-    switch(status) {
-      case 'safe': return '#28a745';
-      case 'warning': return '#ffc107';
-      case 'danger': return '#dc3545';
-      default: return '#6c757d';
+    switch (status) {
+      case 'safe':
+        return '#28a745';
+      case 'warning':
+        return '#ffc107';
+      case 'danger':
+        return '#dc3545';
+      default:
+        return '#6c757d';
     }
   }
 
   getPriorityColor(priority: string): string {
-    switch(priority) {
-      case 'high': return '#dc3545';
-      case 'medium': return '#ffc107';
-      case 'low': return '#28a745';
-      default: return '#6c757d';
+    switch (priority) {
+      case 'high':
+        return '#dc3545';
+      case 'medium':
+        return '#ffc107';
+      case 'low':
+        return '#28a745';
+      default:
+        return '#6c757d';
     }
   }
 
