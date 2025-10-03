@@ -22,6 +22,7 @@ export class TesKantukPage implements OnInit, OnDestroy {
   rasioAspekMata: number = 0;
   warnaStatus: string = 'gelap';
   tesBerjalan: boolean = false;
+  private modelsSiap: boolean = false;
 
   // Data statistik real-time
   statistik = {
@@ -304,6 +305,8 @@ export class TesKantukPage implements OnInit, OnDestroy {
   private async deteksiKantuk() {
     if (!this.videoElement?.nativeElement || !this.canvasElement?.nativeElement)
       return;
+    // Pastikan model sudah siap
+    if (!this.modelsSiap) return;
 
     const video = this.videoElement.nativeElement;
     const canvas = this.canvasElement.nativeElement;
@@ -663,13 +666,16 @@ export class TesKantukPage implements OnInit, OnDestroy {
   // Method untuk memuat model deteksi wajah
   private async muatModel() {
     try {
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/assets/weights');
-      await faceapi.nets.faceLandmark68Net.loadFromUri('/assets/weights');
+      const MODEL_URL = 'assets/weights';
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
       console.log('Model deteksi wajah berhasil dimuat');
+      this.modelsSiap = true;
     } catch (error) {
       console.error('Gagal memuat model deteksi wajah:', error);
       this.statusKantuk = 'Gagal memuat model';
       this.warnaStatus = 'danger';
+      this.modelsSiap = false;
     }
   }
 
@@ -682,7 +688,19 @@ export class TesKantukPage implements OnInit, OnDestroy {
       });
 
       if (this.videoElement) {
-        this.videoElement.nativeElement.srcObject = this.aliranKamera;
+        const video = this.videoElement.nativeElement;
+        video.srcObject = this.aliranKamera;
+        // Tunggu metadata agar dimensi video valid
+        if (video.readyState < 2) {
+          await new Promise<void>((resolve) => {
+            const handler = () => {
+              video.removeEventListener('loadedmetadata', handler);
+              resolve();
+            };
+            video.addEventListener('loadedmetadata', handler);
+          });
+        }
+        await video.play();
         this.intervalDeteksi = setInterval(() => this.deteksiKantuk(), 100);
       }
     } catch (error) {
