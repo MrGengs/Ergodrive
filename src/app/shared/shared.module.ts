@@ -7,13 +7,13 @@ import { SharedHeaderComponent } from '../components/shared-header/shared-header
 
 @NgModule({
   declarations: [
-    SidebarComponent,
-    SharedHeaderComponent
+    SidebarComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
-    IonicModule
+    IonicModule,
+    SharedHeaderComponent
   ],
   exports: [
     SidebarComponent,

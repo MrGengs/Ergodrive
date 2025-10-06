@@ -1,0 +1,194 @@
+<ion-content>
+  <div class="dashboard-container">
+    <app-shared-header
+      [pageTitle]="'Deteksi Tingkat Kantuk'"
+      [pageSubtitle]="'Pantau dan analisis tingkat kantuk Anda secara real-time'"
+      [showSleepTestButton]="!isTesting"
+      [showStopTestButton]="isTesting"
+      (sleepTestClick)="startTest()"
+      (stopTestClick)="stopTest()"
+    >
+      <div class="action-buttons" slot="actions">
+        <ion-button (click)="refreshData()" fill="clear" size="small">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="exportData()" fill="clear" size="small">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </app-shared-header>
+
+    <div class="webcam-section ion-padding">
+      <h2 class="section-title">Real-Time Drowsiness Detection</h2>
+      <div class="video-container" [class.camera-active]="isCameraOn">
+        <video #video autoplay muted playsinline></video>
+        <canvas #canvas></canvas>
+      </div>
+      <div class="detection-status">
+        <p>Status: <span [ngClass]="statusClass">{{ statusDescription }}</span></p>
+      </div>
+      <div class="controls">
+        <ion-button (click)="toggleCamera()" [color]="isCameraOn ? 'medium' : 'primary'" fill="outline">
+          <ion-icon slot="start" [name]="isCameraOn ? 'camera-off' : 'camera'"></ion-icon>
+          {{ isCameraOn ? 'Matikan Kamera' : 'Nyalakan Kamera' }}
+        </ion-button>
+        <div class="test-controls">
+          <ion-button (click)="isTesting ? stopTest() : startTest()" [color]="isTesting ? 'danger' : 'success'" [disabled]="!isCameraOn">
+            <ion-icon slot="start" [name]="isTesting ? 'stop-circle' : 'play-circle'"></ion-icon>
+            {{ isTesting ? 'Hentikan Tes' : 'Mulai Tes' }}
+          </ion-button>
+          <ion-button (click)="resetTest()" color="medium" fill="outline" [disabled]="isTesting">
+            <ion-icon name="refresh"></ion-icon>
+          </ion-button>
+        </div>
+        
+        <ion-chip *ngIf="isTesting" color="danger">
+          <ion-icon name="time"></ion-icon>
+          <ion-label>Sedang Berlangsung: {{ formatTime(testDuration) }}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+    <div class="current-status">
+      <div class="status-card">
+        <div class="status-header">
+          <h2>Status Saat Ini</h2>
+          <ion-icon [name]="statusIcon" [color]="statusColor"></ion-icon>
+          <span>{{ statusMessage }}</span>
+        </div>
+        <div class="status-content">
+          <div class="status-metric">
+            <div class="metric-value">{{ averageEAR | number:'1.2-2' }}</div>
+            <div class="metric-label">Rata-rata EAR</div>
+          </div>
+          <div class="status-metric">
+            <div class="metric-value">{{ formatTime(testDuration) }}</div>
+            <div class="metric-label">Durasi Tes</div>
+          </div>
+          <div class="status-metric">
+            <div class="metric-value">{{ drowsyCount }}</div>
+            <div class="metric-label">Peringatan Kantuk</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-section">
+      <h2 class="section-title">
+        <ion-icon name="analytics"></ion-icon>
+        Grafik EAR
+      </h2>
+      <div class="chart-container">
+        <canvas id="earChart"></canvas>
+      </div>
+    </div>
+
+    <div class="recent-tests-section" *ngIf="testHistory && testHistory.length > 0">
+      <h2 class="section-title">
+        <ion-icon name="time"></ion-icon>
+        Riwayat Tes
+      </h2>
+      <ion-list>
+        <ion-item *ngFor="let test of testHistory">
+          <ion-icon name="time-outline" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Test pada {{ test.timestamp | date:'medium' }}</h3>
+            <p>EAR: {{ test.averageEAR | number:'1.2-2' }} • Durasi: {{ test.duration }}</p>
+          </ion-label>
+          <ion-badge [color]="getStatusBadgeColor(test.status)" slot="end">
+            {{ test.status }}
+          </ion-badge>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div class="warning-box" *ngIf="showWarning" [@fadeInOut]>
+      <ion-icon name="warning"></ion-icon>
+      <span>WASPADA! TINGKAT KANTUK TINGGI!</span>
+    </div>
+
+    <div class="status-info-section">
+      <h2 class="section-title">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        Informasi Status Kantuk
+      </h2>
+      <ion-accordion-group>
+        <ion-accordion value="rendah">
+          <ion-item slot="header" color="success">
+            <ion-label>Status: Rendah</ion-label>
+            <ion-badge color="success" slot="end">Aman</ion-badge>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p>Anda dalam kondisi waspada dan fokus.</p>
+            <ul>
+              <li>Istirahat sejenak setiap 2 jam</li>
+              <li>Minum air putih yang cukup</li>
+              <li>Lakukan peregangan ringan</li>
+              <li>Pastikan sirkulasi udara baik</li>
+            </ul>
+          </div>
+        </ion-accordion>
+        <ion-accordion value="sedang">
+          <ion-item slot="header" color="warning">
+            <ion-label>Status: Sedang</ion-label>
+            <ion-badge color="warning" slot="end">Waspada</ion-badge>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p>Anda mulai menunjukkan tanda-tanda kelelahan.</p>
+            <ul>
+              <li>Beristirahat sejenak 10-15 menit</li>
+              <li>Cuci muka dengan air dingin</li>
+              <li>Minum air putih atau kopi</li>
+              <li>Lakukan peregangan atau berjalan sebentar</li>
+            </ul>
+          </div>
+        </ion-accordion>
+        <ion-accordion value="tinggi">
+          <ion-item slot="header" color="danger">
+            <ion-label>Status: Tinggi</ion-label>
+            <ion-badge color="danger" slot="end">Bahaya</ion-badge>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p>Anda dalam kondisi sangat mengantuk dan berisiko tinggi mengalami microsleep.</p>
+            <ul>
+              <li>Segera hentikan aktivitas mengemudi</li>
+              <li>Beristirahat minimal 15-30 menit</li>
+              <li>Minum air putih atau minuman berkafein</li>
+              <li>Jika memungkinkan, tidur sejenak 20-30 menit</li>
+              <li>Jangan paksakan diri untuk melanjutkan perjalanan</li>
+            </ul>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+    </div>
+
+    <div class="recommendations-section">
+      <h2 class="section-title">
+        <ion-icon name="bulb-outline"></ion-icon>
+        Tips Tetap Waspada
+      </h2>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+          <ion-label>Pastikan pencahayaan cukup di wajah Anda</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+          <ion-label>Duduk tegak dan jaga jarak yang sesuai dengan kamera</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+          <ion-label>Hindari menggosok mata selama tes berlangsung</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+          <ion-label>Lakukan peregangan jika merasa lelah</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+          <ion-label>Minum air yang cukup untuk menjaga konsentrasi</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

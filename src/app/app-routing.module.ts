@@ -36,11 +36,6 @@ const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'tes-kantuk',
-    loadChildren: () => import('./tes-kantuk/tes-kantuk.module').then( m => m.TesKantukPageModule),
-    canActivate: [authGuard]
-  },
-  {
     path: 'waktu-reaksi-rem',
     loadChildren: () => import('./waktu-reaksi-rem/waktu-reaksi-rem.module').then( m => m.WaktuReaksiRemPageModule),
     canActivate: [authGuard]
@@ -48,6 +43,11 @@ const routes: Routes = [
   {
     path: 'waktu-reaksi-kemudi',
     loadChildren: () => import('./waktu-reaksi-kemudi/waktu-reaksi-kemudi.module').then( m => m.WaktuReaksiKemudiPageModule),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'tingkat-kantuk',
+    loadChildren: () => import('./tingkat-kantuk/tingkat-kantuk.module').then( m => m.TingkatKantukPageModule),
     canActivate: [authGuard]
   }
 ];

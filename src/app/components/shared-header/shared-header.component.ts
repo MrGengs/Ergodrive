@@ -1,9 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-shared-header',
   templateUrl: './shared-header.component.html',
-  styleUrls: ['./shared-header.component.scss']
+  styleUrls: ['./shared-header.component.scss'],
+  standalone: true,
+  imports: [CommonModule, IonicModule, FormsModule]
 })
 export class SharedHeaderComponent {
   @Input() pageTitle: string = '';
