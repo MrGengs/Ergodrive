@@ -104,12 +104,6 @@ export class HomePage implements OnInit, OnDestroy {
       icon: 'alert-circle-outline',
     },
     { id: 'tes-kantuk', label: 'Tes Kantuk', icon: 'bed-outline' },
-    { id: 'waktu-reaksi-rem', label: 'Waktu Reaksi Rem', icon: 'time-outline' },
-    {
-      id: 'waktu-reaksi-kemudi',
-      label: 'Waktu Reaksi Kemudi',
-      icon: 'car-outline',
-    },
   ];
 
   // User information will be populated from auth service

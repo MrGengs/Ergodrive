@@ -238,36 +238,7 @@
       </div>
     </div>
 
-    <!-- Performance Trends -->
-    <div class="trends-section">
-      <h2 class="section-title">Tren Performa Mingguan</h2>
-      <div class="trends-card">
-        <div class="trends-chart">
-          <div class="chart-title">Performa Mengemudi</div>
-          <div class="chart-subtitle">Skor rata-rata harian</div>
-          <div class="grid-lines">
-            <div class="grid-line" style="bottom: 0%;" data-value="60%"></div>
-            <div class="grid-line" style="bottom: 25%;" data-value="67.5%"></div>
-            <div class="grid-line" style="bottom: 50%;" data-value="75%"></div>
-            <div class="grid-line" style="bottom: 75%;" data-value="82.5%"></div>
-            <div class="grid-line" style="bottom: 100%;" data-value="90%"></div>
-          </div>
-          <div class="trend-bars">
-            <div class="trend-bar" *ngFor="let trend of weeklyPerformanceData; let i = index">
-              <div class="trend-day">{{ trend.day }}</div>
-              <div class="trend-bar-wrapper">
-                <div class="trend-bar-fill" 
-                     [style.height.%]="((trend.value - 60) / 30) * 100"
-                     [class.highest]="trend.value === getHighestValue()"></div>
-              </div>
-              <div class="trend-value">{{ trend.score }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recommendations -->
+<!-- Recommendations -->
     <div class="recommendations-section">
       <h2 class="section-title">Rekomendasi</h2>
       <div class="recommendations-grid">

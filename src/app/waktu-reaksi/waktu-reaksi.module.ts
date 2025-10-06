@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { WaktuReaksiKemudiPage } from './waktu-reaksi-kemudi.page';
+import { WaktuReaksiPage } from './waktu-reaksi.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: WaktuReaksiKemudiPage
+    component: WaktuReaksiPage
   }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WaktuReaksiKemudiPageRoutingModule {}
+export class WaktuReaksiPageModule {}

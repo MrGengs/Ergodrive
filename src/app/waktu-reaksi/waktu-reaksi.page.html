@@ -1,0 +1,426 @@
+<div class="dashboard-container">
+    <app-shared-header 
+      [pageTitle]="'Waktu Reaksi & Kontrol Kendaraan'"
+      [pageSubtitle]="'Analisis Reaksi Kemudi, Pengereman, dan Akurasi Multisistem'">
+      <div class="action-buttons" slot="actions">
+        <ion-button (click)="openTestSelection()" fill="solid" color="primary" size="small">
+          <ion-icon name="play-outline"></ion-icon>
+          Mulai Tes Baru
+        </ion-button>
+        <ion-button (click)="refreshData()" fill="clear" size="small">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="exportData()" fill="clear" size="small">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </app-shared-header>
+
+    <div class="dashboard-content">
+      <div class="current-performance">
+        <div class="performance-card">
+          <div class="performance-header">
+            <h2>Performa Reaksi Rata-rata Total</h2>
+            <div
+              class="performance-status"
+              [style.color]="getOverallPerformanceColor(statistics.overallReactionScore)"
+            >
+              {{ statistics.overallReactionScore >= 90 ? 'Sempurna' :
+              statistics.overallReactionScore >= 80 ? 'Baik' :
+              statistics.overallReactionScore >= 70 ? 'Cukup' : 'Perlu Perbaikan'
+              }}
+            </div>
+          </div>
+          <div class="performance-content">
+            <div class="performance-metric">
+              <div
+                class="metric-value"
+                [style.color]="getReactionTimeColor(statistics.avgSteeringReactionTime)"
+              >
+                {{ formatDecimal(statistics.avgSteeringReactionTime) }}s
+              </div>
+              <div class="metric-label">Waktu Reaksi Kemudi (Rata-rata)</div>
+            </div>
+            <div class="performance-metric">
+              <div
+                class="metric-value"
+                [style.color]="getReactionTimeColor(statistics.avgBrakeReactionTime)"
+              >
+                {{ formatDecimal(statistics.avgBrakeReactionTime) }}s
+              </div>
+              <div class="metric-label">Waktu Reaksi Rem (Rata-rata)</div>
+            </div>
+            <div class="performance-metric">
+              <div class="metric-value">{{ formatDecimal(statistics.overallAccuracyRate) }}%</div>
+              <div class="metric-label">Presisi & Akurasi Gabungan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-overview">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <ion-icon name="speedometer-outline"></ion-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ statistics.totalTests }}</div>
+            <div class="stat-label">Total Tes (Kemudi & Rem)</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <ion-icon name="trending-up-outline"></ion-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">+{{ formatDecimal(statistics.improvementRate) }}%</div>
+            <div class="stat-label">Peningkatan Reaksi</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <ion-icon name="git-branch-outline"></ion-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ formatDecimal(statistics.totalEventResponse) }}x</div>
+            <div class="stat-label">Total Respon Kejadian</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <ion-icon name="alarm-outline"></ion-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ statistics.avgBrakingDistance }}m</div>
+            <div class="stat-label">Jarak Pengereman Rata-rata</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="multi-analysis-section">
+        <h2 class="section-title">Analisis Reaksi Berdasarkan Konteks</h2>
+        <div class="multi-analysis-grid">
+          
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Kemudi: Pergantian Jalur</h3>
+              <div class="analysis-tag high-risk">Risiko Tinggi</div>
+            </div>
+            <div class="analysis-metrics">
+              <div class="analysis-metric">
+                <span class="metric-label">Waktu Reaksi:</span>
+                <span class="metric-value" [style.color]="getReactionTimeColor(analysis.steeringScenario.reactionTime)">
+                  {{ formatDecimal(analysis.steeringScenario.reactionTime) }}s
+                </span>
+              </div>
+              <div class="analysis-metric">
+                <span class="metric-label">Presisi:</span>
+                <span class="metric-value">{{ analysis.steeringScenario.precision }}%</span>
+              </div>
+              <div class="analysis-metric">
+                <span class="metric-label">Overshoot:</span>
+                <span class="metric-value">{{ analysis.steeringScenario.overshoot }}x</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Rem: Kecepatan 80km/j</h3>
+              <div class="analysis-tag good">Aman</div>
+            </div>
+            <div class="analysis-metrics">
+              <div class="analysis-metric">
+                <span class="metric-label">Waktu Reaksi:</span>
+                <span class="metric-value" [style.color]="getReactionTimeColor(analysis.brakeSpeed.reactionTime)">
+                  {{ formatDecimal(analysis.brakeSpeed.reactionTime) }}s
+                </span>
+              </div>
+              <div class="analysis-metric">
+                <span class="metric-label">Jarak Rem:</span>
+                <span class="metric-value">{{ formatDecimal(analysis.brakeSpeed.brakingDistance) }}m</span>
+              </div>
+              <div class="analysis-metric">
+                <span class="metric-label">Tekanan:</span>
+                <span class="metric-value">{{ analysis.brakeSpeed.pressure }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Beban Kognitif (Tes Tugas Ganda)</h3>
+              <div class="analysis-tag warning">Perlu Peningkatan</div>
+            </div>
+            <div class="analysis-metrics">
+              <div class="analysis-metric">
+                <span class="metric-label">Reaksi Melambat:</span>
+                <span class="metric-value">{{ analysis.cognitiveLoad.slowdown }}%</span>
+              </div>
+              <div class="analysis-metric">
+                <span class="metric-label">Akurasi Navigasi:</span>
+                <span class="metric-value">{{ analysis.cognitiveLoad.navigationAccuracy }}%</span>
+              </div>
+              <div class="analysis-metric">
+                <span class="metric-label">Perhatian:</span>
+                <span class="metric-value">{{ analysis.cognitiveLoad.attentionLevel }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-section">
+        <h2 class="section-title">Visualisasi Metrik Utama</h2>
+        <div class="charts-grid">
+          
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">Waktu Reaksi Kemudi</h3>
+              <div class="card-subtitle">Dibandingkan Level Kantuk</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.steeringVsFatigue.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="(data.value / 1.5) * 100" 
+                        [style.background]="getReactionTimeColor(data.value)"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ formatDecimal(data.value) }}s</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">{{ chartData.jarakPengereman.title }}</h3>
+              <div class="card-subtitle">Perbandingan Jarak Pengereman Total (m)</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.jarakPengereman.data">
+                    <div class="bar-label">
+                      <div class="speed-value">{{ data.label.split(' ')[0] }}</div>
+                      <div class="speed-unit">{{ data.label.split(' ')[1] }}</div>
+                    </div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.percentage)"
+                      ></div>
+                    </div>
+                    <div class="bar-value">
+                      <div class="distance-value">{{ formatDecimal(data.value) }}</div>
+                      <div class="distance-unit">meters</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">{{ chartData.presisiKemudi.title }}</h3>
+              <div class="card-subtitle">Akurasi Kemudi Berdasarkan Sudut Putar</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.presisiKemudi.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.value)"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ data.value }}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">{{ chartData.akurasiReaksi.title }}</h3>
+              <div class="card-subtitle">Frekuensi Reaksi Tepat Waktu dan Akurat</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.akurasiReaksi.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.value)"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ formatDecimal(data.value) }}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="factors-section">
+        <h2 class="section-title">Faktor yang Paling Mempengaruhi Performa</h2>
+        <div class="factors-grid">
+          <div class="factor-card">
+            <div class="factor-icon">
+              <ion-icon name="speedometer-outline" style="color: #ffc107;"></ion-icon>
+            </div>
+            <div class="factor-content">
+              <h3>Kecepatan Saat Tes</h3>
+              <div class="factor-impact" style="color: #ffc107;">Pengaruh Kuat</div>
+              <p>Reaksi Rem melambat 0.3s pada kecepatan di atas 80 km/j. Pertahankan jarak aman.</p>
+            </div>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">
+              <ion-icon name="eye-outline" style="color: #dc3545;"></ion-icon>
+            </div>
+            <div class="factor-content">
+              <h3>Tingkat Kelelahan Visual</h3>
+              <div class="factor-impact" style="color: #dc3545;">Perlu Diperhatikan</div>
+              <p>Tes terbaru menunjukkan peningkatan waktu reaksi kemudi sebesar 15% pada sesi sore.</p>
+            </div>
+          </div>
+          <div class="factor-card">
+            <div class="factor-icon">
+              <ion-icon name="resize-outline" style="color: #28a745;"></ion-icon>
+            </div>
+            <div class="factor-content">
+              <h3>Kekuatan dan Presisi Pedal Rem</h3>
+              <div class="factor-impact" style="color: #28a745;">Efek Positif</div>
+              <p>Tekanan rem optimal pada 95% tes. Latih stabilisasi kemudi saat pengereman keras.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent-tests-section">
+        <h2 class="section-title">Tes Terbaru (Kemudi & Rem)</h2>
+        <div class="recent-tests-list">
+          <div class="test-item">
+            <div class="test-status" style="background: #28a745;"></div>
+            <div class="test-details">
+              <div class="test-time">10 menit yang lalu (Kemudi)</div>
+              <div class="test-metrics">
+                <div class="test-metric">
+                  <span>Reaksi: 0.61s</span>
+                </div>
+                <div class="test-metric">
+                  <span>Skenario: P. Jalur</span>
+                </div>
+                <div class="test-metric">
+                  <span>Presisi: 92%</span>
+                </div>
+                <div class="test-metric">
+                  <span>Stabilitas: 88%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="test-item">
+            <div class="test-status" style="background: #ffc107;"></div>
+            <div class="test-details">
+              <div class="test-time">2 jam yang lalu (Rem)</div>
+              <div class="test-metrics">
+                <div class="test-metric">
+                  <span>Reaksi: 1.05s</span>
+                </div>
+                <div class="test-metric">
+                  <span>Kecepatan: 60 km/j</span>
+                </div>
+                <div class="test-metric">
+                  <span>Jarak: 25.1m</span>
+                </div>
+                <div class="test-metric">
+                  <span>Akurasi: 78%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="test-item">
+            <div class="test-status" style="background: #dc3545;"></div>
+            <div class="test-details">
+              <div class="test-time">Kemarin (Beban Kognitif)</div>
+              <div class="test-metrics">
+                <div class="test-metric">
+                  <span>RT Melambat: 20%</span>
+                </div>
+                <div class="test-metric">
+                  <span>RT Tugas Rem: 1.25s</span>
+                </div>
+                <div class="test-metric">
+                  <span>Kantuk: Tinggi</span>
+                </div>
+                <div class="test-metric">
+                  <span>Skor Total: 65%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendations-section">
+        <h2 class="section-title">Rekomendasi Pelatihan Prioritas</h2>
+        <div class="recommendations-grid">
+          
+          <div class="recommendation-card">
+            <div class="recommendation-icon">
+              <ion-icon name="alert-circle-outline" style="color: #dc3545;"></ion-icon>
+            </div>
+            <div class="recommendation-content">
+              <h3>Fokus: Respon Kecepatan Tinggi</h3>
+              <p>Latih pengereman mendadak pada simulasi kecepatan > 80km/j untuk mengurangi jarak pengereman total.</p>
+            </div>
+            <div class="recommendation-priority">
+              <span class="priority-badge" style="background: #dc3545;">Tinggi</span>
+            </div>
+          </div>
+
+          <div class="recommendation-card">
+            <div class="recommendation-icon">
+              <ion-icon name="compass-outline" style="color: #ffc107;"></ion-icon>
+            </div>
+            <div class="recommendation-content">
+              <h3>Latihan: Konsistensi Kemudi</h3>
+              <p>Lakukan tes SDLP (Stabilitas Posisi Lateral) harian untuk meningkatkan presisi pada tikungan.</p>
+            </div>
+            <div class="recommendation-priority">
+              <span class="priority-badge" style="background: #ffc107;">Sedang</span>
+            </div>
+          </div>
+          
+          <div class="recommendation-card">
+            <div class="recommendation-icon">
+              <ion-icon name="headset-outline" style="color: #007bff;"></ion-icon>
+            </div>
+            <div class="recommendation-content">
+              <h3>Latihan: Tugas Ganda Kognitif</h3>
+              <p>Ulangi tes beban kognitif di pagi hari untuk mendapatkan baseline yang lebih baik saat tidak lelah.</p>
+            </div>
+            <div class="recommendation-priority">
+              <span class="priority-badge" style="background: #007bff;">Sedang</span>
+            </div>
+          </div>
+        </div>
+      </div>

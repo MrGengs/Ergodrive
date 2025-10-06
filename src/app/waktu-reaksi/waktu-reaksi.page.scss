@@ -1,0 +1,774 @@
+// Import theme variables (Assuming you have these defined in a variables.scss file)
+@import "../../theme/variables"; // Make sure this path is correct
+
+// --- Variable Definitions (Adjust as needed based on your theme) ---
+
+// Color Palette
+$color-primary: #3b82f6; // Blue
+$color-secondary: #06b6d4; // Cyan
+$color-success: #28a745; // Green
+$color-warning: #ffc107; // Yellow
+$color-danger: #dc3545; // Red
+$color-light: #f8f9fa;
+$color-dark: #343a40;
+
+// Text Colors
+$text-primary: $color-dark;
+$text-secondary: #6c757d;
+$text-white: white;
+
+// Backgrounds
+$background-light: $color-light;
+$blue-gradient: linear-gradient(135deg, #4c77ea 0%, #254ac9 100%);
+$blue-gradient-2: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+$green-gradient: linear-gradient(90deg, #28a745, #5cb85c);
+
+// Spacing & Sizes
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$border-radius-sm: 0.25rem;
+$border-radius: 0.5rem;
+$border-radius-lg: 0.75rem;
+$container-max-width: 1400px;
+$breakpoint-md: 992px;
+
+// Shadows & Borders
+$shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+$border-color: #dee2e6;
+$border-light: #e9ecef;
+
+// Font Settings
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+
+// --- Mixins ---
+
+// Mixin for card styles
+@mixin card-style {
+  background: $text-white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-sm;
+  border: 1px solid rgba($color-primary, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-0.125rem);
+    box-shadow: $shadow-md;
+  }
+}
+
+// Mixin for section titles
+@mixin section-title-style {
+  font-size: 1.5rem;
+  font-weight: $font-weight-semibold;
+  color: $color-dark;
+  margin-bottom: $spacing-lg;
+  border-left: 5px solid $color-primary;
+  padding-left: $spacing-md;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+// --- General Layout ---
+
+.dashboard-container {
+  min-height: 100vh;
+  background: $background-light;
+  padding: $spacing-md;
+  padding-left: calc($spacing-md + 60px); // Space for sidebar
+  padding-top: 100px; // Space for header
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  
+  // Custom scrollbar styling (matching Tingkat Kantuk)
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: rgba($color-primary, 0.5) transparent;
+  
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 50px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color-primary, 0.5);
+    border-radius: 50px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md $spacing-md 100px $spacing-md;
+    margin-left: 0;
+  }
+
+  // Since the user provided the action buttons inside the slot,
+  // we need to target the slotted content's container if necessary.
+  .action-buttons {
+    display: flex;
+    gap: $spacing-sm;
+
+    ion-button {
+      --color: $text-white;
+      --background: transparent;
+      --box-shadow: none;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      font-weight: $font-weight-semibold;
+
+      &[fill="solid"] {
+        --background: $color-success;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+.dashboard-content {
+  max-width: $container-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  background: transparent;
+  margin-bottom: $spacing-xl;
+
+  & > *:not(:last-child) {
+    margin-bottom: $spacing-xl;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: 0 $spacing-sm;
+    margin: 0 auto $spacing-xl;
+    width: 100%;
+  }
+}
+
+.section-title {
+  @include section-title-style;
+}
+
+// --- Current Performance Section ---
+.current-performance {
+  margin-bottom: $spacing-xl;
+}
+
+.performance-card {
+  @include card-style;
+  border-left: 5px solid $color-primary;
+  padding: $spacing-xl;
+
+  .performance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+    border-bottom: 1px solid $border-light;
+    padding-bottom: $spacing-sm;
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin: 0;
+    }
+
+    .performance-status {
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.25rem $spacing-sm;
+      border-radius: $border-radius-sm;
+      // Color is set dynamically, no static color here
+    }
+  }
+
+  .performance-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-xl;
+    text-align: center;
+
+    .performance-metric {
+      .metric-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: $spacing-sm;
+        line-height: 1;
+        // Color is set dynamically, no static color here
+      }
+
+      .metric-label {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.05rem;
+      }
+    }
+  }
+}
+
+// --- Dashboard Content Spacing ---
+.dashboard-content {
+  & > *:not(:last-child) {
+    margin-bottom: $spacing-xl;
+  }
+  
+  // Add extra space for specific sections
+  .multi-analysis-section,
+  .charts-section,
+  .factors-section,
+  .recommendations-section {
+    margin-top: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    
+    .section-title {
+      margin-bottom: $spacing-lg;
+    }
+  }
+}
+
+// --- Stats Overview Section (Modified from example to fit the provided HTML) ---
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-lg;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  // Styles inherited from the provided example
+  @include card-style; // Remove the default card-style if you want to keep the background colors, or adapt the mixin
+  padding: $spacing-lg;
+  color: $text-white;
+  position: relative;
+  overflow: hidden;
+  background: $color-primary; // Default for fallback
+
+  &:nth-child(1) {
+    background: #1e40af;
+  }
+
+  &:nth-child(2) {
+    background: $color-success; // Changed to green for improvement rate
+  }
+
+  &:nth-child(3) {
+    background: #2563eb;
+  }
+
+  &:nth-child(4) {
+    background: $color-secondary;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-sm;
+    background: rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease;
+
+    ion-icon {
+      font-size: 1.2rem;
+      color: $text-white;
+    }
+  }
+
+  .stat-content {
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-white;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+// --- Multi Analysis Section ---
+.multi-analysis-section {
+  .multi-analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-lg;
+  }
+
+  .analysis-card {
+    @include card-style;
+    border-left: 3px solid $border-color;
+
+    .analysis-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-md;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: $font-weight-semibold;
+        margin: 0;
+      }
+
+      .analysis-tag {
+        font-size: $font-size-xs;
+        font-weight: $font-weight-semibold;
+        padding: 0.2rem $spacing-sm;
+        border-radius: $border-radius-sm;
+        color: $text-white;
+
+        &.high-risk {
+          background: $color-danger;
+        }
+        &.good {
+          background: $color-success;
+        }
+        &.warning {
+          background: $color-warning;
+        }
+      }
+    }
+
+    .analysis-metrics {
+      .analysis-metric {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+        border-bottom: 1px dashed $border-light;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .metric-label {
+          color: $text-secondary;
+          font-size: $font-size-sm;
+        }
+
+        .metric-value {
+          font-weight: $font-weight-semibold;
+          font-size: $font-size-sm;
+          // Color is set dynamically for reaction time
+        }
+      }
+    }
+  }
+}
+
+// --- Charts Section (Using the bar-chart structure from the example) ---
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  @include card-style;
+  padding: 0;
+  overflow: hidden;
+  border-top: 4px solid $color-primary; // Default border
+
+  &:nth-child(1) {
+    border-top-color: $color-primary;
+  }
+  &:nth-child(2) {
+    border-top-color: $color-secondary;
+  }
+  &:nth-child(3) {
+    border-top-color: #8b5cf6; // Purple
+  }
+  &:nth-child(4) {
+    border-top-color: $color-success;
+  }
+
+  .card-header {
+    background: $border-light;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 1px solid $border-color;
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin: 0;
+    }
+    .card-subtitle {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+  }
+
+  .card-content {
+    padding: $spacing-lg;
+  }
+
+  .bar-chart {
+    height: 250px; // Fixed height for consistency
+    display: flex;
+    align-items: center;
+
+    .chart-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      gap: $spacing-sm;
+
+      .bar-item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-md;
+
+        .bar-label {
+          min-width: 80px;
+          color: $text-secondary;
+          font-size: $font-size-sm;
+          text-align: right;
+          
+          .speed-value { font-size: $font-size-base; font-weight: $font-weight-semibold; }
+          .speed-unit { font-size: $font-size-xs; color: $color-danger;}
+        }
+
+        .bar-wrapper {
+          flex: 1;
+          height: 18px;
+          background: $border-light;
+          border-radius: $border-radius-sm;
+          overflow: hidden;
+
+          .bar-fill {
+            height: 100%;
+            border-radius: $border-radius-sm;
+            transition: width 0.8s ease;
+            background: $green-gradient; // Dynamic color from getBarColor
+          }
+        }
+
+        .bar-value {
+          min-width: 45px;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-semibold;
+          text-align: right;
+          color: $text-primary;
+
+          .distance-value { font-size: $font-size-base; color: $color-primary;}
+          .distance-unit { font-size: $font-size-xs; color: $text-secondary; }
+        }
+      }
+    }
+  }
+}
+
+
+// --- Factors Section ---
+.factors-section {
+  .factors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-lg;
+  }
+
+  .factor-card {
+    @include card-style;
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-md;
+    border-left: 5px solid $border-light; // Placeholder, real color is in icon
+
+    .factor-icon {
+      ion-icon {
+        font-size: 2rem;
+      }
+    }
+
+    .factor-content {
+      flex: 1;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: $font-weight-semibold;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .factor-impact {
+        font-size: $font-size-sm;
+        font-weight: 700;
+        margin-bottom: $spacing-sm;
+      }
+
+      p {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        margin: 0;
+      }
+    }
+    
+    // Apply border color based on impact level for visual emphasis
+    &:nth-child(1) { border-left-color: $color-warning; } // Pengaruh Kuat
+    &:nth-child(2) { border-left-color: $color-danger; } // Perlu Diperhatikan
+    &:nth-child(3) { border-left-color: $color-success; } // Efek Positif
+  }
+}
+
+// --- Recent Tests Section ---
+.recent-tests-section {
+  .recent-tests-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .test-item {
+    @include card-style;
+    padding: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    box-shadow: $shadow-sm;
+
+    .test-status {
+      width: 8px;
+      height: 100%;
+      min-height: 50px;
+      border-radius: $border-radius-sm;
+      flex-shrink: 0;
+      // Color is set dynamically in HTML
+    }
+
+    .test-details {
+      flex: 1;
+
+      .test-time {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-primary;
+        margin-bottom: $spacing-sm;
+      }
+
+      .test-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-lg;
+        font-size: $font-size-xs;
+        color: $text-secondary;
+
+        .test-metric {
+          font-weight: $font-weight-semibold;
+          
+          span {
+            padding: 0.2rem 0;
+            border-bottom: 2px solid $border-light;
+            transition: border-bottom-color 0.3s;
+            &:hover {
+              border-bottom-color: $color-primary;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// --- Recommendations Section ---
+.recommendations-section {
+  .recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-lg;
+  }
+
+  .recommendation-card {
+    @include card-style;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-lg;
+    border-left: 5px solid $border-light; // Placeholder
+
+    .recommendation-icon {
+      flex-shrink: 0;
+      ion-icon {
+        font-size: 2rem;
+      }
+    }
+
+    .recommendation-content {
+      flex: 1;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: $font-weight-semibold;
+        margin: 0 0 0.25rem 0;
+        color: $color-primary;
+      }
+
+      p {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        margin: 0;
+      }
+    }
+
+    .recommendation-priority {
+      flex-shrink: 0;
+      .priority-badge {
+        font-size: $font-size-xs;
+        font-weight: 700;
+        padding: 0.2rem $spacing-sm;
+        border-radius: $border-radius-sm;
+        color: $text-white;
+        display: block;
+        min-width: 50px;
+        text-align: center;
+      }
+    }
+    
+    // Apply border color based on priority
+    &:nth-child(1) { border-left-color: $color-danger; } // Tinggi
+    &:nth-child(2) { border-left-color: $color-warning; } // Sedang
+    &:nth-child(3) { border-left-color: $color-primary; } // Sedang
+  }
+}
+
+// --- Trends Section ---
+.trends-section {
+  .trends-card {
+    @include card-style;
+    padding: $spacing-xl;
+  }
+
+  .trends-chart {
+    position: relative;
+    height: 300px;
+    padding-top: $spacing-lg;
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin-bottom: $spacing-sm;
+    }
+    
+    .chart-subtitle {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      margin-bottom: $spacing-lg;
+    }
+
+    .grid-lines {
+      position: absolute;
+      top: 50px; // Aligns with top of chart area
+      bottom: 20px; // Leaves space for trend-day labels
+      left: 0;
+      right: 0;
+      
+      .grid-line {
+        position: absolute;
+        width: 100%;
+        border-top: 1px dashed $border-color;
+        
+        &::before {
+          content: attr(data-value);
+          position: absolute;
+          left: -40px;
+          top: -10px;
+          font-size: $font-size-xs;
+          color: $text-secondary;
+        }
+      }
+    }
+
+    .trend-bars {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80%; // The main chart area
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+
+      .trend-bar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 12%;
+
+        .trend-day {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          margin-top: $spacing-sm;
+        }
+
+        .trend-bar-wrapper {
+          flex: 1;
+          display: flex;
+          align-items: flex-end;
+          width: 100%;
+          padding: 0 10%; // Space between bars
+          
+          .trend-bar-fill {
+            width: 100%;
+            background: $color-primary;
+            border-radius: $border-radius-sm $border-radius-sm 0 0;
+            transition: height 0.8s ease;
+            box-shadow: $shadow-sm;
+
+            &.highest {
+              background: $color-success;
+            }
+          }
+        }
+
+        .trend-value {
+          font-size: $font-size-sm;
+          font-weight: $font-weight-semibold;
+          color: $color-dark;
+          margin-top: $spacing-sm;
+        }
+      }
+    }
+  }
+}

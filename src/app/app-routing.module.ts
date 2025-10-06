@@ -26,6 +26,11 @@ const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'beban-kerja',
+    loadChildren: () => import('./beban-kerja/beban-kerja.module').then(m => m.BebanKerjaPageModule),
+    canActivate: [authGuard]
+  },
+  {
     path: 'beban-kerja-kemudi',
     loadChildren: () => import('./beban-kerja-kemudi/beban-kerja-kemudi.module').then( m => m.BebanKerjaKemudiPageModule),
     canActivate: [authGuard]
@@ -36,18 +41,13 @@ const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'waktu-reaksi-rem',
-    loadChildren: () => import('./waktu-reaksi-rem/waktu-reaksi-rem.module').then( m => m.WaktuReaksiRemPageModule),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'waktu-reaksi-kemudi',
-    loadChildren: () => import('./waktu-reaksi-kemudi/waktu-reaksi-kemudi.module').then( m => m.WaktuReaksiKemudiPageModule),
-    canActivate: [authGuard]
-  },
-  {
     path: 'tingkat-kantuk',
     loadChildren: () => import('./tingkat-kantuk/tingkat-kantuk.module').then( m => m.TingkatKantukPageModule),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'waktu-reaksi',
+    loadChildren: () => import('./waktu-reaksi/waktu-reaksi.module').then( m => m.WaktuReaksiPageModule),
     canActivate: [authGuard]
   }
 ];

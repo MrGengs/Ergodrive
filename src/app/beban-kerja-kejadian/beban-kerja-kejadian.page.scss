@@ -23,9 +23,32 @@
   min-height: 100vh;
   background: $background-light;
   padding: 0;
-  overflow-x: hidden;
   padding-top: 100px; // Space for fixed header
+  padding-left: 60px; // Space for sidebar
+  overflow-y: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
+  
+  // Custom scrollbar styling (matching Tingkat Kantuk)
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: rgba($primary-blue, 0.5) transparent;
+  
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 50px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary-blue, 0.5);
+    border-radius: 50px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
 
   @media (max-width: 768px) {
     padding-top: 90px;

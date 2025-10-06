@@ -13,7 +13,7 @@ import { SharedHeaderComponent } from '../components/shared-header/shared-header
     CommonModule,
     RouterModule,
     IonicModule,
-    SharedHeaderComponent
+    SharedHeaderComponent // Import standalone component
   ],
   exports: [
     SidebarComponent,

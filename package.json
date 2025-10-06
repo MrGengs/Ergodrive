@@ -37,7 +37,7 @@
     "@types/papaparse": "^5.3.16",
     "chart.js": "^4.5.0",
     "face-api.js": "^0.22.2",
-    "firebase": "^10.8.0",
+    "firebase": "^10.14.1",
     "ionicons": "^7.0.0",
     "papaparse": "^5.5.3",
     "tslib": "^2.3.0",

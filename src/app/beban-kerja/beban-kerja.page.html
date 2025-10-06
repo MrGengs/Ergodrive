@@ -1,0 +1,345 @@
+<div class="dashboard-container">
+    <app-shared-header 
+      [pageTitle]="'Beban Kerja Kognitif & Kontrol Kemudi'">
+    </app-shared-header>
+
+      <div class="stats-overview">
+        <div class="stat-card">
+          <div class="stat-icon"><ion-icon name="speedometer-outline"></ion-icon></div>
+          <div class="stat-content">
+            <div class="stat-value">{{ statistics.totalTests }}</div>
+            <div class="stat-label">Tingkat Stres</div>
+        </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><ion-icon name="trending-up-outline"></ion-icon></div>
+          <div class="stat-content">
+            <div class="stat-value">+{{ statistics.improvementRate }}%</div>
+            <div class="stat-label">Peningkatan</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><ion-icon name="alert-circle-outline"></ion-icon></div>
+          <div class="stat-content">
+            <div class="stat-value">{{ statistics.totalEvents }}</div>
+            <div class="stat-label">Total Kejadian</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Types Section -->
+      <div class="event-types-section">
+        <h2 class="section-title">Tipe Kejadian</h2>
+        <div class="event-types-grid">
+          <div class="event-type-card" *ngFor="let type of eventTypes">
+            <div class="event-type-icon">
+              <ion-icon [name]="type.icon"></ion-icon>
+            </div>
+            <div class="event-type-content">
+              <h3>{{ type.name }}</h3>
+              <div class="event-type-stats">
+                <span class="event-type-count">{{ type.count }} kejadian</span>
+                <span class="event-type-accuracy" [class.positive]="type.trend === 'up'" [class.negative]="type.trend === 'down'">
+                  <ion-icon [name]="type.trend === 'up' ? 'trending-up' : 'trending-down'"></ion-icon>
+                  {{ type.accuracy }}%
+                </span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="type.accuracy"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detailed-analysis">
+        <h2 class="section-title">Analisis Kontrol Mengemudi</h2>
+        <div class="analysis-grid">
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Akurasi Kontrol</h3>
+              <span class="analysis-value">{{ detailedAnalysis.accuracy.current }}%</span>
+            </div>
+            <div class="analysis-details">
+              <div class="analysis-item">
+                <span>Rata-rata:</span>
+                <span>{{ detailedAnalysis.accuracy.average }}%</span>
+              </div>
+              <div class="analysis-item">
+                <span>Perubahan:</span>
+                <span [class]="detailedAnalysis.accuracy.improvement > 0 ? 'improvement' : 'decline'">
+                  +{{ detailedAnalysis.accuracy.improvement }}%
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Tingkat Stres</h3>
+              <span class="analysis-value">{{ statistics.stressLevel }}%</span>
+            </div>
+            <div class="analysis-details">
+              <div class="analysis-item">
+                <span>Ideal:</span>
+                <span>Di bawah 20%</span>
+              </div>
+              <div class="analysis-item">
+                <span>Catatan:</span>
+                <span [class]="statistics.stressLevel > 30 ? 'decline' : 'improvement'">
+                  {{ statistics.stressLevel > 30 ? 'Tinggi' : 'Normal' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Respon Kejadian</h3>
+              <span class="analysis-value">{{ statistics.averageResponseTime }}s</span>
+            </div>
+            <div class="analysis-details">
+              <div class="analysis-item">
+                <span>Target:</span>
+                <span>< 1.0s</span>
+              </div>
+              <div class="analysis-item">
+                <span>Tren:</span>
+                <span>Stabil</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-section">
+        <h2 class="section-title">Grafik Stabilitas & Kejadian</h2>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">{{ chartData.sdlp.title }}</h3>
+              <div class="card-subtitle">Deviasi Posisi Lateral (SDLP)</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.sdlp.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.value, 'sdlp')"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ data.value }} cm</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">{{ chartData.kecepatanRataRata.title }}</h3>
+              <div class="card-subtitle">Perbandingan Kecepatan</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.kecepatanRataRata.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.value, 'speed')"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ data.value }} km/h</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">Frekuensi Tipe Kejadian</h3>
+              <div class="card-subtitle">Kejadian yang Terdeteksi</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.deteksiSensor.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.value, 'event')"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ data.value }}x</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="card-header">
+              <h3 class="card-title">{{ chartData.akurasiNavigasi.title }}</h3>
+              <div class="card-subtitle">Akurasi Keputusan Navigasi</div>
+            </div>
+            <div class="card-content">
+              <div class="bar-chart">
+                <div class="chart-container">
+                  <div class="bar-item" *ngFor="let data of chartData.akurasiNavigasi.data">
+                    <div class="bar-label">{{ data.label }}</div>
+                    <div class="bar-wrapper">
+                      <div 
+                        class="bar-fill" 
+                        [style.width.%]="data.percentage"
+                        [style.background]="getBarColor(data.value, 'accuracy')"
+                      ></div>
+                    </div>
+                    <div class="bar-value">{{ data.value }}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="activities-section">
+        <h2 class="section-title">Aktivitas & Kejadian Terkini</h2>
+        <div class="activities-grid">
+          <div class="activity-card">
+            <div class="activity-header">
+              <div class="activity-icon">
+                <ion-icon name="car-outline"></ion-icon>
+              </div>
+              <div class="activity-info">
+                <h4 class="activity-title">Tes Stabilitas Kemudi</h4>
+                <p class="activity-time">2 jam yang lalu</p>
+              </div>
+              <div class="activity-status completed">Selesai</div>
+            </div>
+            <div class="activity-details">
+              <p>SDLP: 12.5 cm | Skor Akurasi: 88%</p>
+            </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-header">
+              <div class="activity-icon">
+                <ion-icon name="analytics-outline"></ion-icon>
+              </div>
+              <div class="activity-info">
+                <h4 class="activity-title">Analisis Tren Mingguan</h4>
+                <p class="activity-time">4 jam yang lalu</p>
+              </div>
+              <div class="activity-status success">Optimal</div>
+            </div>
+            <div class="activity-details">
+              <p>Stabilitas meningkat: +5%</p>
+            </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-header">
+              <div class="activity-icon">
+                <ion-icon name="trending-down-outline"></ion-icon>
+              </div>
+              <div class="activity-info">
+                <h4 class="activity-title">Respon Kejadian Mendadak</h4>
+                <p class="activity-time">1 jam yang lalu</p>
+              </div>
+              <div class="activity-status warning">Respon Lambat</div>
+            </div>
+            <div class="activity-details">
+              <p>Respon: 1.5s (Target < 1.0s)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendations-section">
+        <h2 class="section-title">Rekomendasi Peningkatan</h2>
+        <div class="recommendations-grid">
+          <!-- Rekomendasi 1: Stabilitas Kemudi -->
+          <div class="recommendation-card">
+            <div class="recommendation-icon">
+              <ion-icon name="compass-outline"></ion-icon>
+            </div>
+            <div class="recommendation-content">
+              <div class="recommendation-header">
+                <h4>Perbaikan Stabilitas Kemudi</h4>
+                <span class="priority high">Tinggi</span>
+              </div>
+              <p class="recommendation-stats">SDLP saat ini: <strong>12.5 cm</strong> (Rekomendasi: < 10 cm)</p>
+              <ul class="recommendation-details">
+                <li><ion-icon name="checkmark-circle"></ion-icon> Lakukan latihan fokus visual 10 menit sebelum mengemudi</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon> Pertahankan posisi tangan pada pukul 9 dan 3</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon> Hindari gerakan kemudi yang tiba-tiba</li>
+              </ul>
+              <div class="progress-container">
+                <div class="progress-label">Kemajuan Mingguan: 40%</div>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 40%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rekomendasi 2: Waktu Respon -->
+          <div class="recommendation-card">
+            <div class="recommendation-icon">
+              <ion-icon name="time-outline"></ion-icon>
+            </div>
+            <div class="recommendation-content">
+              <div class="recommendation-header">
+                <h4>Waktu Respon Kejadian</h4>
+                <span class="priority medium">Sedang</span>
+              </div>
+              <p class="recommendation-stats">Rata-rata respon: <strong>1.2 detik</strong> (Target: < 1.0 detik)</p>
+              <ul class="recommendation-details">
+                <li><ion-icon name="checkmark-circle"></ion-icon> Latihan deteksi visual 3x seminggu</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon> Fokus pada jarak pandang minimal 3 detik ke depan</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon> Kurangi gangguan saat mengemudi</li>
+              </ul>
+              <div class="progress-container">
+                <div class="progress-label">Kemajuan Bulanan: 65%</div>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 65%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rekomendasi 3: Manajemen Stres -->
+          <div class="recommendation-card">
+            <div class="recommendation-icon">
+              <ion-icon name="leaf-outline"></ion-icon>
+            </div>
+            <div class="recommendation-content">
+              <div class="recommendation-header">
+                <h4>Manajemen Stres & Kelelahan</h4>
+                <span class="priority low">Rendah</span>
+              </div>
+              <p class="recommendation-stats">Tingkat stres: <strong>Sedang</strong> (28.7/100)</p>
+              <ul class="recommendation-details">
+                <li><ion-icon name="checkmark-circle"></ion-icon> Lakukan teknik pernapasan 4-7-8 sebelum mengemudi</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon> Istirahat 15 menit setiap 2 jam mengemudi</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon> Dengarkan musik yang menenangkan</li>
+              </ul>
+              <div class="progress-container">
+                <div class="progress-label">Konsistensi: 80%</div>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 80%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      

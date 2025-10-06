@@ -36,7 +36,17 @@
       <ion-icon name="alert-circle-outline" class="menu-icon"></ion-icon>
       <span class="menu-text">Beban Kerja (Kejadian)</span>
     </a>
+
     <a
+      [routerLink]="['/beban-kerja']"
+      class="menu-item"
+      [class.active]="isActive('/beban-kerja')"
+      [title]="isCollapsed ? 'Beban Kerja' : ''"
+    >
+      <ion-icon name="analytics-outline" class="menu-icon"></ion-icon>
+      <span class="menu-text">Beban Kerja</span>
+    </a>
+  <a
       [routerLink]="['/tingkat-kantuk']"
       class="menu-item"
       [class.active]="isActive('/tingkat-kantuk')"
@@ -46,24 +56,16 @@
       <span class="menu-text">Tingkat Kantuk</span>
     </a>
     <a
-      [routerLink]="['/waktu-reaksi-rem']"
+      [routerLink]="['/waktu-reaksi']"
       class="menu-item"
-      [class.active]="isActive('/waktu-reaksi-rem')"
-      [title]="isCollapsed ? 'Waktu Reaksi Rem' : ''"
+      [class.active]="isActive('/waktu-reaksi')"
+      [title]="isCollapsed ? 'Waktu Reaksi' : ''"
     >
-      <ion-icon name="time-outline" class="menu-icon"></ion-icon>
-      <span class="menu-text">Waktu Reaksi Rem</span>
-    </a>
-    <a
-      [routerLink]="['/waktu-reaksi-kemudi']"
-      class="menu-item"
-      [class.active]="isActive('/waktu-reaksi-kemudi')"
-      [title]="isCollapsed ? 'Waktu Reaksi Kemudi' : ''"
-    >
-      <ion-icon name="car-outline" class="menu-icon"></ion-icon>
-      <span class="menu-text">Waktu Reaksi Kemudi</span>
+      <ion-icon name="timer-outline" class="menu-icon"></ion-icon>
+      <span class="menu-text">Waktu Reaksi</span>
     </a>
   </div>
+
 
   <div class="spacer"></div>
 
