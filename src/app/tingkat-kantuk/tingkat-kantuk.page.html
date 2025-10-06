@@ -84,22 +84,48 @@
     </div>
 
     <div class="recent-tests-section" *ngIf="testHistory && testHistory.length > 0">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 class="section-title" style="margin-bottom: 0;">
+          <ion-icon name="time"></ion-icon>
+          Riwayat Tes ({{ testHistory.length }})
+        </h2>
+        <ion-button (click)="clearAllHistory()" color="danger" size="small" fill="outline">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Hapus Semua
+        </ion-button>
+      </div>
+      
+      <ion-list>
+        <ion-item-sliding *ngFor="let test of testHistory">
+          <ion-item>
+            <ion-icon name="time-outline" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Test pada {{ test.timestamp | date:'medium' }}</h3>
+              <p>EAR: {{ test.averageEAR | number:'1.2-2' }} • Durasi: {{ test.duration }}</p>
+            </ion-label>
+            <ion-badge [color]="getStatusBadgeColor(test.status)" slot="end">
+              {{ test.status }}
+            </ion-badge>
+          </ion-item>
+          
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="test.id && deleteTest(test.id)">
+              <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+
+    <div class="recent-tests-section" *ngIf="!testHistory || testHistory.length === 0">
       <h2 class="section-title">
         <ion-icon name="time"></ion-icon>
         Riwayat Tes
       </h2>
-      <ion-list>
-        <ion-item *ngFor="let test of testHistory">
-          <ion-icon name="time-outline" slot="start"></ion-icon>
-          <ion-label>
-            <h3>Test pada {{ test.timestamp | date:'medium' }}</h3>
-            <p>EAR: {{ test.averageEAR | number:'1.2-2' }} • Durasi: {{ test.duration }}</p>
-          </ion-label>
-          <ion-badge [color]="getStatusBadgeColor(test.status)" slot="end">
-            {{ test.status }}
-          </ion-badge>
-        </ion-item>
-      </ion-list>
+      <div style="text-align: center; padding: 2rem; color: var(--ion-color-medium);">
+        <ion-icon name="document-text-outline" style="font-size: 4rem; opacity: 0.3;"></ion-icon>
+        <p>Belum ada riwayat tes. Mulai tes pertama Anda!</p>
+      </div>
     </div>
 
     <div class="warning-box" *ngIf="showWarning" [@fadeInOut]>

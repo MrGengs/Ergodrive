@@ -7,7 +7,7 @@ export const environment = {
   firebase: {
     apiKey: "AIzaSyD_3FwNHuyXD6RGvexFXIWnlsKaLmMNGcs",
     authDomain: "ergodrivee.firebaseapp.com",
-    databaseURL: "https://ergodrivee-default-rtdb.firebaseio.com/",
+    databaseURL: "https://ergodrivee-default-rtdb.firebaseio.com",
     projectId: "ergodrivee",
     storageBucket: "ergodrivee.firebasestorage.app",
     messagingSenderId: "644396987565",

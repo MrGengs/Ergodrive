@@ -31,16 +31,6 @@ const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'beban-kerja-kemudi',
-    loadChildren: () => import('./beban-kerja-kemudi/beban-kerja-kemudi.module').then( m => m.BebanKerjaKemudiPageModule),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'beban-kerja-kejadian',
-    loadChildren: () => import('./beban-kerja-kejadian/beban-kerja-kejadian.module').then( m => m.BebanKerjaKejadianPageModule),
-    canActivate: [authGuard]
-  },
-  {
     path: 'tingkat-kantuk',
     loadChildren: () => import('./tingkat-kantuk/tingkat-kantuk.module').then( m => m.TingkatKantukPageModule),
     canActivate: [authGuard]

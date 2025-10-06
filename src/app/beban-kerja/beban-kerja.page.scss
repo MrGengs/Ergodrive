@@ -506,6 +506,8 @@ app-shared-header {
 // Recommendations Section
 .recommendations-section {
   @extend .section-container;
+  padding-bottom: 2rem; // Add bottom padding to prevent content from being too close to the bottom
+  margin-bottom: 2rem; // Add margin to separate from next section
   
   .recommendations-grid {
     display: grid;
