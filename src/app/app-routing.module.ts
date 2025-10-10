@@ -39,6 +39,11 @@ const routes: Routes = [
     path: 'waktu-reaksi',
     loadChildren: () => import('./waktu-reaksi/waktu-reaksi.module').then( m => m.WaktuReaksiPageModule),
     canActivate: [authGuard]
+  },
+  {
+    path: 'vr-driving',
+    loadChildren: () => import('./vr-driving/vr-driving.module').then( m => m.VrDrivingPageModule),
+    canActivate: [authGuard]
   }
 ];
 
