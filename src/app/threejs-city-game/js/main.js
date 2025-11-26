@@ -151,9 +151,6 @@ function buildRoadNetwork() {
       createLaneMarkings(CITY.size * 0.98, 0.8, 0, i - width / 4, Math.PI / 2);
     }
   }
-
-  createRoad(CITY.size * 1.35, CITY.diagonalRoadWidth, 0, 0, Math.PI / 4, 0x1c1c1c);
-  createRoad(CITY.size * 1.35, CITY.diagonalRoadWidth, 0, 0, -Math.PI / 4, 0x1c1c1c);
 }
 
 function createRoundabout() {
@@ -412,6 +409,7 @@ scatterDetails();
 
 // --- CAR ---
 let car;
+let steeringWheel = null;
 loader.load(
   "assets/car.glb",
   (gltf) => {
@@ -420,7 +418,16 @@ loader.load(
     car.position.set(-12, 0, -140);
     car.rotation.y = Math.PI;
     car.traverse((child) => {
-      if (child.isMesh) child.castShadow = true;
+      if (child.isMesh) {
+        child.castShadow = true;
+      }
+      // Coba deteksi mesh setir berdasarkan nama
+      if (!steeringWheel && child.name) {
+        const n = child.name.toLowerCase();
+        if (n.includes("steer") || n.includes("wheel_steer") || n.includes("steering")) {
+          steeringWheel = child;
+        }
+      }
     });
     scene.add(car);
   },
@@ -460,7 +467,9 @@ const CAMERA_LABELS = {
 let currentCameraMode = CAMERA_MODES[0];
 const cameraOffsets = {
   third: new THREE.Vector3(0, 5, -10),
-  first: new THREE.Vector3(0, 2.8, 1.1),
+  // First-person: sedikit mundur ke belakang agar setir & dashboard
+  // lebih banyak kelihatan (tampilan kokpit lebih luas)
+  first: new THREE.Vector3(0, 1.55, -0.8),
   top: new THREE.Vector3(0, 80, 0.2),
 };
 
@@ -479,10 +488,28 @@ function cycleCameraMode() {
 }
 
 window.addEventListener("keydown", (e) => {
+  // Cegah aksi default browser (scroll, fokus tombol, dll)
+  // agar kombinasi tombol (maju + belok) tetap responsif
+  const movementKeys = [
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "KeyW",
+    "KeyA",
+    "KeyS",
+    "KeyD",
+  ];
+
+  if (movementKeys.includes(e.code)) {
+    e.preventDefault();
+  }
+
   if (e.code === "KeyC") {
     cycleCameraMode();
     return;
   }
+
   keyboardState[e.code] = true;
 });
 window.addEventListener("keyup", (e) => (keyboardState[e.code] = false));
@@ -496,22 +523,47 @@ if (cameraButton) {
 
 const speed = 0.4; // Slightly increased speed
 const rotationSpeed = 0.04;
+let steeringVisualAngle = 0; // derajat semu untuk animasi setir
 
 function updateCar() {
   if (!car) return;
-  if (keyboardState["ArrowUp"] || keyboardState["KeyW"]) {
+
+  const movingForward = keyboardState["ArrowUp"] || keyboardState["KeyW"];
+  const movingBackward = keyboardState["ArrowDown"] || keyboardState["KeyS"];
+  const isMoving = movingForward || movingBackward;
+
+  if (movingForward) {
     car.position.x += Math.sin(car.rotation.y) * speed;
     car.position.z += Math.cos(car.rotation.y) * speed;
   }
-  if (keyboardState["ArrowDown"] || keyboardState["KeyS"]) {
+  if (movingBackward) {
     car.position.x -= Math.sin(car.rotation.y) * speed * 0.5;
     car.position.z -= Math.cos(car.rotation.y) * speed * 0.5;
   }
-  if (keyboardState["ArrowLeft"] || keyboardState["KeyA"]) {
-    car.rotation.y += rotationSpeed;
+
+  // Hanya boleh belok ketika mobil sedang bergerak (maju atau mundur)
+  if (isMoving) {
+    if (keyboardState["ArrowLeft"] || keyboardState["KeyA"]) {
+      car.rotation.y += rotationSpeed;
+      steeringVisualAngle = THREE.MathUtils.clamp(steeringVisualAngle + 3, -45, 45);
+    }
+    if (keyboardState["ArrowRight"] || keyboardState["KeyD"]) {
+      car.rotation.y -= rotationSpeed;
+      steeringVisualAngle = THREE.MathUtils.clamp(steeringVisualAngle - 3, -45, 45);
+    }
   }
-  if (keyboardState["ArrowRight"] || keyboardState["KeyD"]) {
-    car.rotation.y -= rotationSpeed;
+
+  // Perlahan kembalikan setir ke tengah jika tidak membelok
+  if (!keyboardState["ArrowLeft"] && !keyboardState["KeyA"] &&
+      !keyboardState["ArrowRight"] && !keyboardState["KeyD"]) {
+    steeringVisualAngle *= 0.85;
+    if (Math.abs(steeringVisualAngle) < 0.1) steeringVisualAngle = 0;
+  }
+
+  // Terapkan rotasi ke mesh setir (jika ditemukan)
+  if (steeringWheel) {
+    // Balik arah rotasi agar kiri/kanan sesuai dengan belokan mobil
+    steeringWheel.rotation.y = -THREE.MathUtils.degToRad(steeringVisualAngle);
   }
 }
 
@@ -538,14 +590,18 @@ function updateCamera() {
   const baseOffset = cameraOffsets[currentCameraMode].clone();
   baseOffset.applyQuaternion(car.quaternion);
   const desiredPosition = car.position.clone().add(baseOffset);
-  const lerpSpeed = currentCameraMode === "first" ? 0.3 : 0.12;
-  camera.position.lerp(desiredPosition, lerpSpeed);
+  const lerpSpeed = 0.12;
 
   if (currentCameraMode === "first") {
-    const forward = new THREE.Vector3(0, 0.4, -5);
+    // Di mode first-person, kamera "menempel" ke interior mobil:
+    // tidak ada lerp sehingga tidak terasa maju–mundur relatif ke dashboard.
+    camera.position.copy(desiredPosition);
+
+    const forward = new THREE.Vector3(0, 0.05, 10);
     forward.applyQuaternion(car.quaternion);
     camera.lookAt(car.position.clone().add(forward));
   } else {
+    camera.position.lerp(desiredPosition, lerpSpeed);
     camera.lookAt(car.position);
   }
 }
