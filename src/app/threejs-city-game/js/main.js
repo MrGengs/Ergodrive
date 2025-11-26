@@ -140,7 +140,8 @@ function createLaneMarkings(length, width, x, z, rotationY = 0) {
 
 function buildRoadNetwork() {
   for (let i = -gridExtent; i <= gridExtent; i += CITY.blockSpacing) {
-    const width = Math.abs(i) < 2 ? CITY.mainRoadWidth : CITY.secondaryRoadWidth;
+    const width =
+      Math.abs(i) < 2 ? CITY.mainRoadWidth : CITY.secondaryRoadWidth;
     createRoad(CITY.size, width, i, 0);
     createRoad(CITY.size, width, 0, i);
 
@@ -165,7 +166,12 @@ function createRoundabout() {
   scene.add(roundabout);
 
   const innerGarden = new THREE.Mesh(
-    new THREE.CylinderGeometry(CITY.plazaRadius - 6, CITY.plazaRadius - 6, 2, 48),
+    new THREE.CylinderGeometry(
+      CITY.plazaRadius - 6,
+      CITY.plazaRadius - 6,
+      2,
+      48
+    ),
     new THREE.MeshStandardMaterial({ color: 0x20351e })
   );
   innerGarden.position.y = 2.2;
@@ -173,14 +179,22 @@ function createRoundabout() {
 
   const monumentBase = new THREE.Mesh(
     new THREE.CylinderGeometry(6, 8, 3, 24),
-    new THREE.MeshStandardMaterial({ color: 0x2f3841, metalness: 0.4, roughness: 0.3 })
+    new THREE.MeshStandardMaterial({
+      color: 0x2f3841,
+      metalness: 0.4,
+      roughness: 0.3,
+    })
   );
   monumentBase.position.y = 4;
   scene.add(monumentBase);
 
   const spire = new THREE.Mesh(
     new THREE.ConeGeometry(3, 26, 16),
-    new THREE.MeshStandardMaterial({ color: 0xd0d4dc, metalness: 0.8, roughness: 0.2 })
+    new THREE.MeshStandardMaterial({
+      color: 0xd0d4dc,
+      metalness: 0.8,
+      roughness: 0.2,
+    })
   );
   spire.position.y = 17;
   scene.add(spire);
@@ -241,7 +255,11 @@ function createLinearPark() {
 function createStreetLight(x, z, rotation = 0) {
   const pole = new THREE.Mesh(
     new THREE.CylinderGeometry(0.2, 0.35, 8, 12),
-    new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.6, roughness: 0.4 })
+    new THREE.MeshStandardMaterial({
+      color: 0x999999,
+      metalness: 0.6,
+      roughness: 0.4,
+    })
   );
   pole.position.set(x, 4, z);
   pole.castShadow = true;
@@ -249,9 +267,17 @@ function createStreetLight(x, z, rotation = 0) {
 
   const arm = new THREE.Mesh(
     new THREE.BoxGeometry(3, 0.2, 0.2),
-    new THREE.MeshStandardMaterial({ color: 0xcad3df, metalness: 0.5, roughness: 0.3 })
+    new THREE.MeshStandardMaterial({
+      color: 0xcad3df,
+      metalness: 0.5,
+      roughness: 0.3,
+    })
   );
-  arm.position.set(x + Math.sin(rotation) * 1.5, 7, z + Math.cos(rotation) * 1.5);
+  arm.position.set(
+    x + Math.sin(rotation) * 1.5,
+    7,
+    z + Math.cos(rotation) * 1.5
+  );
   arm.rotation.y = rotation;
   scene.add(arm);
 
@@ -339,7 +365,8 @@ function populateCity() {
       z <= gridExtent - CITY.blockOffset;
       z += CITY.blockSpacing
     ) {
-      if (Math.abs(x) < CITY.plazaRadius && Math.abs(z) < CITY.plazaRadius) continue;
+      if (Math.abs(x) < CITY.plazaRadius && Math.abs(z) < CITY.plazaRadius)
+        continue;
       if (Math.random() > CITY.density) continue;
 
       const zone = ZONES[getZoneForPosition(x, z)];
@@ -374,7 +401,11 @@ function populateCity() {
 function createTransitHub() {
   const base = new THREE.Mesh(
     new THREE.BoxGeometry(70, 6, 30),
-    new THREE.MeshStandardMaterial({ color: 0x2d3439, metalness: 0.3, roughness: 0.4 })
+    new THREE.MeshStandardMaterial({
+      color: 0x2d3439,
+      metalness: 0.3,
+      roughness: 0.4,
+    })
   );
   base.position.set(150, 3, 110);
   base.castShadow = true;
@@ -424,7 +455,11 @@ loader.load(
       // Coba deteksi mesh setir berdasarkan nama
       if (!steeringWheel && child.name) {
         const n = child.name.toLowerCase();
-        if (n.includes("steer") || n.includes("wheel_steer") || n.includes("steering")) {
+        if (
+          n.includes("steer") ||
+          n.includes("wheel_steer") ||
+          n.includes("steering")
+        ) {
           steeringWheel = child;
         }
       }
@@ -438,7 +473,9 @@ loader.load(
 );
 
 // --- PARK ---
-loader.load("assets/gardening._park._landscape.13.glb", (gltf) => {
+loader.load(
+  "assets/gardening._park._landscape.13.glb",
+  (gltf) => {
     const park = gltf.scene;
 
     // Scale and position the model
@@ -446,15 +483,18 @@ loader.load("assets/gardening._park._landscape.13.glb", (gltf) => {
     park.position.set(60, 0, 60); // Position it in one of the city blocks
 
     park.traverse((child) => {
-        if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-        }
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
     });
     scene.add(park);
-}, undefined, (error) => {
+  },
+  undefined,
+  (error) => {
     console.error("An error happened while loading the park model:", error);
-});
+  }
+);
 
 // --- CONTROLS ---
 const keyboardState = {};
@@ -545,17 +585,29 @@ function updateCar() {
   if (isMoving) {
     if (keyboardState["ArrowLeft"] || keyboardState["KeyA"]) {
       car.rotation.y += rotationSpeed;
-      steeringVisualAngle = THREE.MathUtils.clamp(steeringVisualAngle + 3, -45, 45);
+      steeringVisualAngle = THREE.MathUtils.clamp(
+        steeringVisualAngle + 3,
+        -45,
+        45
+      );
     }
     if (keyboardState["ArrowRight"] || keyboardState["KeyD"]) {
       car.rotation.y -= rotationSpeed;
-      steeringVisualAngle = THREE.MathUtils.clamp(steeringVisualAngle - 3, -45, 45);
+      steeringVisualAngle = THREE.MathUtils.clamp(
+        steeringVisualAngle - 3,
+        -45,
+        45
+      );
     }
   }
 
   // Perlahan kembalikan setir ke tengah jika tidak membelok
-  if (!keyboardState["ArrowLeft"] && !keyboardState["KeyA"] &&
-      !keyboardState["ArrowRight"] && !keyboardState["KeyD"]) {
+  if (
+    !keyboardState["ArrowLeft"] &&
+    !keyboardState["KeyA"] &&
+    !keyboardState["ArrowRight"] &&
+    !keyboardState["KeyD"]
+  ) {
     steeringVisualAngle *= 0.85;
     if (Math.abs(steeringVisualAngle) < 0.1) steeringVisualAngle = 0;
   }
