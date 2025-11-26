@@ -427,7 +427,6 @@ function createTransitHub() {
 
 function scatterDetails() {
   createGroundLayers();
-  buildRoadNetwork();
   createRoundabout();
   createWaterGarden();
   createLinearPark();
