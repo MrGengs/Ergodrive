@@ -563,6 +563,7 @@ if (cameraButton) {
 const speed = 0.4; // Slightly increased speed
 const rotationSpeed = 0.04;
 let steeringVisualAngle = 0; // derajat semu untuk animasi setir
+let isFirstCameraFrame = true; // Flag untuk menandai frame pertama kamera
 
 function updateCar() {
   if (!car) return;
@@ -624,14 +625,20 @@ function updateCamera() {
 
   if (currentCameraMode === "top") {
     const offset = cameraOffsets.top.clone();
-    camera.position.lerp(
-      new THREE.Vector3(
-        car.position.x + offset.x,
-        car.position.y + offset.y,
-        car.position.z + offset.z
-      ),
-      0.15
+    const desiredTopPosition = new THREE.Vector3(
+      car.position.x + offset.x,
+      car.position.y + offset.y,
+      car.position.z + offset.z
     );
+    
+    if (isFirstCameraFrame) {
+      // Frame pertama: langsung set posisi tanpa zoom
+      camera.position.copy(desiredTopPosition);
+      isFirstCameraFrame = false;
+    } else {
+      camera.position.lerp(desiredTopPosition, 0.15);
+    }
+    
     const lookTarget = car.position.clone();
     lookTarget.y += 0.5;
     camera.lookAt(lookTarget);
@@ -651,8 +658,20 @@ function updateCamera() {
     const forward = new THREE.Vector3(0, 0.05, 10);
     forward.applyQuaternion(car.quaternion);
     camera.lookAt(car.position.clone().add(forward));
+    
+    if (isFirstCameraFrame) {
+      isFirstCameraFrame = false;
+    }
   } else {
-    camera.position.lerp(desiredPosition, lerpSpeed);
+    // Mode third-person
+    if (isFirstCameraFrame) {
+      // Frame pertama: langsung set posisi tanpa zoom
+      camera.position.copy(desiredPosition);
+      isFirstCameraFrame = false;
+    } else {
+      // Setelah frame pertama, gunakan lerp untuk smooth follow
+      camera.position.lerp(desiredPosition, lerpSpeed);
+    }
     camera.lookAt(car.position);
   }
 }
